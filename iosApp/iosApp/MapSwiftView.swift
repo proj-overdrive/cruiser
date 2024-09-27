@@ -12,10 +12,12 @@ import ComposeApp
 import MapboxMaps
 
 func mapWithSwiftViewFactory(
-    contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>
+    contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>,
+    contentSpotsState: SkieSwiftStateFlow<[Spot]>
 ) -> MapWithSwiftViewFactory {
     return MapSwiftViewContainer(
-        contentPaddingState: contentPaddingState
+        contentPaddingState: contentPaddingState,
+        contentSpotsState: contentSpotsState
     )
 }
 
@@ -23,13 +25,21 @@ class MapSwiftViewContainer: MapWithSwiftViewFactory {
     
     var viewController: UIViewController
     
-    init(contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>) {
-        self.viewController = UIHostingController(rootView: MapSwiftView(contentPaddingState: contentPaddingState))
+    init(
+        contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>,
+        contentSpotsState: SkieSwiftStateFlow<[Spot]>) {
+            self.viewController = UIHostingController(
+                rootView: MapSwiftView(
+                    contentPaddingState: contentPaddingState,
+                    contentSpotsState: contentSpotsState
+                )
+            )
     }
 }
 
 struct MapSwiftView: View {
     var contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>
+    var contentSpotsState: SkieSwiftStateFlow<[Spot]>
     
     @Environment(\.colorScheme) var colorScheme
     @State var contentPadding: Foundation_layoutPaddingValues?
@@ -37,6 +47,13 @@ struct MapSwiftView: View {
 
     var body: some View {
         Map(viewport: $viewport) {
+            let spots = contentSpotsState.value
+            CircleAnnotationGroup(spots){ spot in
+                CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude))
+                        .circleColor(colorScheme == .light ? "#FF0000" : "#00FF00")
+                        .circleRadius(10.0)
+                }
+            .slot("top")
         }
         .ornamentOptions(
             OrnamentOptions(
@@ -51,5 +68,12 @@ struct MapSwiftView: View {
                 self.contentPadding = contentPadding
             }
         }
+        .onChange(of: contentSpotsState.value) { newSpots in
+            if let firstSpot = newSpots.first {
+                viewport = Viewport.camera(center: .init(latitude: firstSpot.latitude, longitude: firstSpot.longitude), zoom: 14, bearing: 0, pitch: 0)
+            }
+        }
     }
 }
+
+extension Spot: Identifiable {}
