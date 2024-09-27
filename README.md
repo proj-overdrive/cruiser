@@ -1,5 +1,30 @@
 # cruiser
 
+Client side application of SpotOn.
+
+## Build and Run
+
+Please complete [this tutorial](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-setup.html)
+to ensure you have the correct environment for building and running the project.
+
+Next you need a private token from mapbox. Follow [these instructions](https://docs.mapbox.com/android/maps/guides/install/#configure-your-secret-token)
+to configure this for Android, but generally create a token with the `Downloads:Read` permission and
+add it to your `gradle.properties` file.
+
+     echo "MAPBOX_DOWNLOADS_TOKEN=<your_token>" >> ~/.gradle/gradle.properties
+
+For iOS, follow [these instructions](https://docs.mapbox.com/ios/maps/guides/install/#step-3-configure-your-secret-token)
+but generally add the following to your `~/.netrc` file.
+
+     machine api.mapbox.com
+     login mapbox
+     password <your_token>
+
+Assuming you have the correct environment and the token, you can build and run the project from
+Android Studio.
+
+## Compose Multiplatform Project Structure
+
 This is a Kotlin Multiplatform project targeting Android, iOS, Web.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
