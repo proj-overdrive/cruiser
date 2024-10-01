@@ -27,7 +27,7 @@ val httpClient = HttpClient {
     }
 }
 
-suspend inline fun <reified T> requestGet(endpoint: String): T {
-    val response: HttpResponse = httpClient.get(BASE_URL + endpoint)
+suspend inline fun <reified T> requestGet(endpoint: String, baseUrl: String = BASE_URL): T {
+    val response: HttpResponse = httpClient.get(baseUrl + endpoint)
     return response.body()
 }

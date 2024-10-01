@@ -1,4 +1,4 @@
-package com.overdrive.cruiser
+package com.overdrive.cruiser.views
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,10 +10,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.overdrive.cruiser.models.Spot
 
+/**
+ * The different screens that can be displayed in the app.
+ */
+enum class Screen {
+    Map, User, Settings
+}
 
+/**
+ * A composable that displays the app's navigation bar.
+ *
+ * @param spots The spots to display on the map.
+ */
 @Composable
-fun Navigation(spots: List<Spot>) {
-    var selectedScreen by remember { mutableStateOf("Map") }
+// TODO: Remove spots as a dependency
+fun NavigationBar(spots: List<Spot>) {
+    var selectedScreen by remember { mutableStateOf(Screen.Map) }
 
     Scaffold(
         bottomBar = {
@@ -21,20 +33,20 @@ fun Navigation(spots: List<Spot>) {
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.LocationOn, contentDescription = null) },
                     label = { Text("Map") },
-                    selected = selectedScreen == "Map",
-                    onClick = { selectedScreen = "Map" }
+                    selected = selectedScreen == Screen.Map,
+                    onClick = { selectedScreen = Screen.Map }
                 )
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.Person, contentDescription = null) },
                     label = { Text("User") },
-                    selected = selectedScreen == "User",
-                    onClick = { selectedScreen = "User" }
+                    selected = selectedScreen == Screen.User,
+                    onClick = { selectedScreen = Screen.User }
                 )
                 BottomNavigationItem(
                     icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
                     label = { Text("Settings") },
-                    selected = selectedScreen == "Settings",
-                    onClick = { selectedScreen = "Settings" }
+                    selected = selectedScreen == Screen.Settings,
+                    onClick = { selectedScreen = Screen.Settings }
                 )
             }
         }
@@ -43,9 +55,9 @@ fun Navigation(spots: List<Spot>) {
             modifier = Modifier.padding(innerPadding)
         ) {
             when (selectedScreen) {
-                "Map" -> MapView(spots)
-                "User" -> UserView()
-                "Settings" -> SettingsView()
+                Screen.Map -> MapView(spots)
+                Screen.User -> UserView()
+                Screen.Settings -> SettingsView()
             }
         }
     }

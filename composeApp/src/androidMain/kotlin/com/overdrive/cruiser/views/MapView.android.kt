@@ -1,4 +1,4 @@
-package com.overdrive.cruiser
+package com.overdrive.cruiser.views
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,13 +18,23 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.CircleAnnotationGroup
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
+import com.overdrive.cruiser.models.Coordinate
 import com.overdrive.cruiser.models.Spot
 
+/**
+ * A composable that displays a map with a markers at the given location.
+ *
+ * @param modifier The modifier to apply to this layout.
+ * @param contentPadding The padding to apply to the map content.
+ * @param location The location to center the map on, which will live update.
+ * @param spots The spots to display on the map.
+ */
 @OptIn(MapboxExperimental::class)
 @Composable
 actual fun SpotMapView(
     modifier: Modifier,
     contentPadding: PaddingValues,
+    location: Coordinate,
     spots: List<Spot>
 )  = with(LocalDensity.current) {
     val context = LocalContext.current
@@ -63,19 +73,11 @@ actual fun SpotMapView(
         }.build()
     }
 
+    val mapViewportState = remember { MapViewportState() }
+
     MapboxMap(
         modifier = modifier.fillMaxSize(),
-        mapViewportState = remember { MapViewportState() }.apply {
-            LaunchedEffect(spots) {
-                if (spots.isNotEmpty()) {
-                    setCameraOptions(
-                        com.mapbox.maps.CameraOptions.Builder().center(
-                            Point.fromLngLat(spots[0].longitude, spots[0].latitude)
-                        ).zoom(10.0).build()
-                    )
-                }
-            }
-        },
+        mapViewportState = mapViewportState,
         logoSettings = logoSettings,
         scaleBarSettings = scaleBarSettings,
         attributionSettings = attributionSettings,
@@ -88,6 +90,15 @@ actual fun SpotMapView(
                    .withCircleColor("#FF0000")
                    .withCircleRadius(10.0)
             }
+        )
+    }
+
+    LaunchedEffect(location) {
+        mapViewportState.easeTo(
+            com.mapbox.maps.CameraOptions.Builder()
+                .center(Point.fromLngLat(location.latitude, location.longitude))
+                .zoom(10.0)
+                .build()
         )
     }
 }

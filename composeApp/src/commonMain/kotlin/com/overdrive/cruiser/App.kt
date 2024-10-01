@@ -8,7 +8,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.overdrive.cruiser.endpoints.SpotFetcher
 import com.overdrive.cruiser.models.Spot
+import com.overdrive.cruiser.views.NavigationBar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -45,7 +47,7 @@ fun App() {
                     }
                 }
             }
-            Navigation(spots)
+            NavigationBar(spots)
         }
     }
 }
