@@ -1,5 +1,8 @@
 package com.overdrive.cruiser.views
 
-class UserView {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun UserView() {
 
 }
