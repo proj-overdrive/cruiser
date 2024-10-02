@@ -13,10 +13,12 @@ import MapboxMaps
 
 func mapWithSwiftViewFactory(
     contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>,
+    contentLocationState: SkieSwiftStateFlow<Coordinate>,
     contentSpotsState: SkieSwiftStateFlow<[Spot]>
 ) -> MapWithSwiftViewFactory {
     return MapSwiftViewContainer(
         contentPaddingState: contentPaddingState,
+        contentLocationState: contentLocationState,
         contentSpotsState: contentSpotsState
     )
 }
@@ -27,10 +29,13 @@ class MapSwiftViewContainer: MapWithSwiftViewFactory {
     
     init(
         contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>,
-        contentSpotsState: SkieSwiftStateFlow<[Spot]>) {
+        contentLocationState: SkieSwiftStateFlow<Coordinate>,
+        contentSpotsState: SkieSwiftStateFlow<[Spot]>
+    ) {
             self.viewController = UIHostingController(
                 rootView: MapSwiftView(
                     contentPaddingState: contentPaddingState,
+                    contentLocationState: contentLocationState,
                     contentSpotsState: contentSpotsState
                 )
             )
@@ -39,11 +44,17 @@ class MapSwiftViewContainer: MapWithSwiftViewFactory {
 
 struct MapSwiftView: View {
     var contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>
+    var contentLocationState: SkieSwiftStateFlow<Coordinate>
     var contentSpotsState: SkieSwiftStateFlow<[Spot]>
     
     @Environment(\.colorScheme) var colorScheme
     @State var contentPadding: Foundation_layoutPaddingValues?
-    @State var viewport = Viewport.camera(center: .init(latitude: 48.2082, longitude: 16.3719), zoom: 14, bearing: 0, pitch: 0)
+    @State private var viewport: Viewport = Viewport.camera(
+        center: .init(latitude: 48.2082, longitude: 16.3719), // Default center coordinates
+        zoom: 14, // Default zoom level
+        bearing: 0,
+        pitch: 0
+    )
 
     var body: some View {
         Map(viewport: $viewport) {
@@ -68,9 +79,16 @@ struct MapSwiftView: View {
                 self.contentPadding = contentPadding
             }
         }
-        .onChange(of: contentSpotsState.value) { newSpots in
-            if let firstSpot = newSpots.first {
-                viewport = Viewport.camera(center: .init(latitude: firstSpot.latitude, longitude: firstSpot.longitude), zoom: 14, bearing: 0, pitch: 0)
+        .task {
+            for await newLocation in contentLocationState {
+                withViewportAnimation(.easeOut(duration: 0.5)) {
+                    viewport = Viewport.camera(
+                        center: .init(latitude: newLocation.longitude, longitude: newLocation.latitude),
+                        zoom: 10,
+                        bearing: 0,
+                        pitch: 0
+                    )
+                }
             }
         }
     }
