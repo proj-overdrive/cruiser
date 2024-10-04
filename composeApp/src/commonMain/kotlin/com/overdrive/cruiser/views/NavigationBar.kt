@@ -28,7 +28,7 @@ enum class Screen {
 // TODO: Remove spots as a dependency
 fun NavigationBar(spots: List<Spot>) {
     var selectedScreen by remember { mutableStateOf(Screen.Map) }
-    val mapViewModel = remember { MapViewModel() }
+    val mapViewModel = remember { MapViewModel().apply { updateSpots(spots) } }
 
     Scaffold(
         bottomBar = {
@@ -60,7 +60,7 @@ fun NavigationBar(spots: List<Spot>) {
             modifier = Modifier.padding(innerPadding)
         ) {
             when (selectedScreen) {
-                Screen.Map -> MapView(spots, mapViewModel = mapViewModel)
+                Screen.Map -> MapView(mapViewModel = mapViewModel)
                 Screen.User -> UserView()
                 Screen.Settings -> SettingsView()
             }
