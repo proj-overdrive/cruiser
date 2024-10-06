@@ -5,6 +5,6 @@ data class Coordinate(
     val longitude: Double,
 ) {
     companion object {
-        val DEFAULT = Coordinate(0.0, 0.0)
+        val DEFAULT = Coordinate(-123.3656, 48.4284)
     }
 }

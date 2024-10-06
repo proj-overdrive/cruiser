@@ -33,24 +33,28 @@ import androidx.compose.runtime.*
  */
 @Composable
 fun MapView(mapViewModel: MapViewModel) {
+    val currentLocation by mapViewModel.currentLocation.collectAsState()
+    val query by mapViewModel.query.collectAsState()
+    val suggestions by mapViewModel.suggestions.collectAsState()
+    val spots by mapViewModel.spots.collectAsState()
+
     val scope = rememberCoroutineScope()
     val suggestionGenerator = remember { SearchBoxFetcher() }
     val focusManager = LocalFocusManager.current
-
-    val query by mapViewModel.query.collectAsState("")
-    val suggestions by mapViewModel.suggestions.collectAsState(emptyList())
-    val currentLocation by mapViewModel.currentLocation.collectAsState(Coordinate.DEFAULT)
-    val spots by mapViewModel.spots.collectAsState(emptyList())
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        LaunchedEffect(Unit) {
+            mapViewModel.updateSpots()
+        }
+
         // SpotMapView is rendered first, at the bottom layer
         SpotMapView(
             modifier = Modifier.fillMaxSize(),
             location = currentLocation,
-            spots = spots
+            spots = spots,
         )
 
         // Search box and suggestion list are overlaid on top of the map
