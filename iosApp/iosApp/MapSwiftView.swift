@@ -14,12 +14,14 @@ import MapboxMaps
 func mapWithSwiftViewFactory(
     contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>,
     contentLocationState: SkieSwiftStateFlow<Coordinate>,
-    contentSpotsState: SkieSwiftStateFlow<[Spot]>
+    contentSpotsState: SkieSwiftStateFlow<[Spot]>,
+    onSpotSelected: @escaping (Spot) -> KotlinUnit
 ) -> MapWithSwiftViewFactory {
     return MapSwiftViewContainer(
         contentPaddingState: contentPaddingState,
         contentLocationState: contentLocationState,
-        contentSpotsState: contentSpotsState
+        contentSpotsState: contentSpotsState,
+        onSpotSelected: onSpotSelected
     )
 }
 
@@ -30,13 +32,16 @@ class MapSwiftViewContainer: MapWithSwiftViewFactory {
     init(
         contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>,
         contentLocationState: SkieSwiftStateFlow<Coordinate>,
-        contentSpotsState: SkieSwiftStateFlow<[Spot]>
+        contentSpotsState: SkieSwiftStateFlow<[Spot]>,
+        onSpotSelected: @escaping (Spot) -> KotlinUnit
+        
     ) {
             self.viewController = UIHostingController(
                 rootView: MapSwiftView(
                     contentPaddingState: contentPaddingState,
                     contentLocationState: contentLocationState,
-                    contentSpotsState: contentSpotsState
+                    contentSpotsState: contentSpotsState,
+                    onSpotSelected: onSpotSelected
                 )
             )
     }
@@ -46,6 +51,7 @@ struct MapSwiftView: View {
     var contentPaddingState: SkieSwiftStateFlow<Foundation_layoutPaddingValues>
     var contentLocationState: SkieSwiftStateFlow<Coordinate>
     var contentSpotsState: SkieSwiftStateFlow<[Spot]>
+    var onSpotSelected: (Spot) -> KotlinUnit
     
     @Environment(\.colorScheme) var colorScheme
     @State var contentPadding: Foundation_layoutPaddingValues?
@@ -61,8 +67,11 @@ struct MapSwiftView: View {
         Map(viewport: $viewport) {
             CircleAnnotationGroup(spots){ spot in
                 CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude))
-                        .circleColor(colorScheme == .light ? "#FF0000" : "#00FF00")
+                    .circleColor(spot.isBooked ? "#FF0000" : "#00FF00")
                         .circleRadius(10.0)
+                        .onTapGesture {
+                            _ = onSpotSelected(spot)
+                        }
                 }
             .slot("top")
         }

@@ -21,4 +21,5 @@ expect fun SpotMapView(
     contentPadding: PaddingValues = PaddingValues(all = 0.dp),
     location: Coordinate = Coordinate(0.0, 0.0),
     spots: List<Spot> = emptyList(),
+    onSpotSelected: (Spot) -> Unit
 )

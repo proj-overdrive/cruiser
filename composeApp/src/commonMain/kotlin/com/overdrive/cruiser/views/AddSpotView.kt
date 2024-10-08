@@ -70,35 +70,7 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.fillMaxWidth().background(color = Color(0xFFF5F5F5))) {
-        TopAppBar(
-            backgroundColor = Color.White,
-            modifier = Modifier.shadow(8.dp),
-            content = {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    IconButton(
-                        onClick = onBackClick,
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
-
-                    Text(
-                        text = "Add Spot",
-                        color = Color.Black,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
+        SpotOnTopBar(onBackClick, "Add Spot")
 
         Column(modifier = Modifier.padding(16.dp)) {
 
@@ -165,7 +137,7 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row() {
+            Row {
                 TextField(
                     label = { Text("Add $/hour") },
                     value = dollarsAnHour,

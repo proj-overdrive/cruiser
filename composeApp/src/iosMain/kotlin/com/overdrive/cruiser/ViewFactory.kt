@@ -12,6 +12,7 @@ fun setViewFactories(
         contentPaddingState: StateFlow<PaddingValues>,
         contentLocationState: StateFlow<Coordinate>,
         contentSpotsState: StateFlow<List<Spot>>,
+        onSpotSelected: (Spot) -> Unit
     ) -> MapWithSwiftViewFactory,
 ) {
     com.overdrive.cruiser.views.mapWithSwiftViewFactory = mapWithSwiftViewFactory

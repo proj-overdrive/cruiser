@@ -10,4 +10,5 @@ data class Spot(
     @SerialName("address") val address: String,
     @SerialName("latitude") val latitude: Double,
     @SerialName("longitude") val longitude: Double,
+    var isBooked: Boolean = false,
 )
