@@ -1,5 +1,6 @@
 package com.overdrive.cruiser.views
 
+import com.overdrive.cruiser.endpoints.SpotFetcher
 import com.overdrive.cruiser.models.Coordinate
 import com.overdrive.cruiser.models.Spot
 import com.overdrive.cruiser.models.mapbox.Suggestion
@@ -31,7 +32,7 @@ class MapViewModel {
         _suggestions.value = suggestions
     }
 
-    fun updateSpots(spots: List<Spot>) {
-        _spots.value = spots
+    suspend fun updateSpots() {
+        _spots.value = SpotFetcher().fetch()
     }
 }

@@ -49,6 +49,7 @@ struct MapSwiftView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State var contentPadding: Foundation_layoutPaddingValues?
+    @State var spots: [Spot] = []
     @State private var viewport: Viewport = Viewport.camera(
         center: .init(latitude: 48.2082, longitude: 16.3719), // Default center coordinates
         zoom: 14, // Default zoom level
@@ -58,7 +59,6 @@ struct MapSwiftView: View {
 
     var body: some View {
         Map(viewport: $viewport) {
-            let spots = contentSpotsState.value
             CircleAnnotationGroup(spots){ spot in
                 CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude))
                         .circleColor(colorScheme == .light ? "#FF0000" : "#00FF00")
@@ -89,6 +89,11 @@ struct MapSwiftView: View {
                         pitch: 0
                     )
                 }
+            }
+        }
+        .task {
+            for await newSpots in contentSpotsState {
+                self.spots = newSpots
             }
         }
     }
