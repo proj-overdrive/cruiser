@@ -22,8 +22,6 @@ struct iOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     init() {
-        KoinInitKt.doInitKoin()
-        
         ViewFactoryKt.setViewFactories(
             mapWithSwiftViewFactory: mapWithSwiftViewFactory
         )
