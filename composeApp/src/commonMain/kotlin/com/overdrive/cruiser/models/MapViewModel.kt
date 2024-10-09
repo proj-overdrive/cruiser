@@ -1,4 +1,4 @@
-package com.overdrive.cruiser.views
+package com.overdrive.cruiser.models
 
 import com.overdrive.cruiser.endpoints.SpotFetcher
 import com.overdrive.cruiser.models.Coordinate
