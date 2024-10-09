@@ -8,6 +8,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.utils.io.InternalAPI
 import kotlinx.serialization.json.Json
 
 // Temporary logic while working with localhost api

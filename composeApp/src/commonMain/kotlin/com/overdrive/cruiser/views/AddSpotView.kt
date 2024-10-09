@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import com.overdrive.cruiser.endpoints.SearchBoxFetcher
 import com.overdrive.cruiser.models.AddSpotViewModel
 import com.overdrive.cruiser.models.Coordinate
+import com.overdrive.cruiser.models.Spot
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_off
 import cruiser.composeapp.generated.resources.accessibility_on
@@ -54,10 +55,11 @@ import cruiser.composeapp.generated.resources.weather_off
 import cruiser.composeapp.generated.resources.weather_on
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.vectorResource
+import kotlin.contracts.Effect
 
 
 @Composable
-fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
+fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewModel: AddSpotViewModel) {
     val scope = rememberCoroutineScope()
     var dollarsAnHour by remember { mutableStateOf("0.0") }
     var dollarsADay by remember { mutableStateOf("0.0") }
@@ -66,11 +68,12 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
 
     val suggestions by addSpotViewModel.suggestions.collectAsState()
     val query by addSpotViewModel.query.collectAsState()
+    val currentLocation by addSpotViewModel.currentLocation.collectAsState()
     val suggestionGenerator = remember { SearchBoxFetcher() }
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.fillMaxWidth().background(color = Color(0xFFF5F5F5))) {
-        SpotOnTopBar(onBackClick, "Add Spot")
+        SpotOnTopBar("Add Spot", onBackClick)
 
         Column(modifier = Modifier.padding(16.dp)) {
 
@@ -264,7 +267,8 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
                     .background(color = Color.LightGray)
             ) {
                 Button(
-                    onClick = {},
+                    onClick = {
+                    },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -311,8 +315,11 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
 
             Button(
                 onClick = {
-                    /* TODO: Add spot to database */
-                },
+                    val spot = Spot("999", "alyssa", "3915 Braefoot Rd", currentLocation.latitude, currentLocation.longitude)
+                    scope.launch {
+                        addSpotViewModel.createSpot(spot)
+                    }
+                    onSpotAdded() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
                 modifier = Modifier
                     .fillMaxWidth()
