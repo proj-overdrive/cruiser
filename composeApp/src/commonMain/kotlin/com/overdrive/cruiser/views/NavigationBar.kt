@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.vectorResource
  * The different screens that can be displayed in the app.
  */
 enum class Screen {
-    Map, User, MySpots, SavedSpots, AddSpot
+    Map, User, MySpots, SavedSpots, AddSpot, Login, Terms
 }
 
 /**
@@ -36,7 +36,7 @@ enum class Screen {
  */
 @Composable
 fun NavigationBar() {
-    var selectedScreen by remember { mutableStateOf(Screen.Map) }
+    var selectedScreen by remember { mutableStateOf(Screen.Login) }
     val mapViewModel = remember { MapViewModel() }
     val userViewModel = remember { UserViewModel() }
     val mySpotsViewModel = remember { MySpotsViewModel() }
@@ -44,43 +44,48 @@ fun NavigationBar() {
 
     Scaffold(
         bottomBar = {
-            BottomNavigation(
-                backgroundColor = Color.White,
-            ) {
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
-                    label = { Text("Map") },
-                    selected = selectedScreen == Screen.Map,
-                    onClick = { selectedScreen = Screen.Map }
-                )
-                BottomNavigationItem(
-                    icon = {
-                        Image(
-                            modifier = Modifier.size(20.dp),
-                            imageVector = vectorResource(Res.drawable.my_spots),
-                            contentDescription = null
-                        )},
-                    label = { Text("My Spots") },
-                    selected = selectedScreen == Screen.MySpots,
-                    onClick = { selectedScreen = Screen.MySpots }
-                )
-                BottomNavigationItem(
-                    icon = {
-                        Image(
-                            modifier = Modifier.size(20.dp),
-                            imageVector = vectorResource(Res.drawable.saved_spots),
-                            contentDescription = null
-                        )},
-                    label = { Text("Saved Spots") },
-                    selected = selectedScreen == Screen.SavedSpots,
-                    onClick = { selectedScreen = Screen.SavedSpots }
-                )
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    label = { Text("User") },
-                    selected = selectedScreen == Screen.User,
-                    onClick = { selectedScreen = Screen.User }
-                )
+            if (selectedScreen != Screen.Login && selectedScreen != Screen.Terms) {
+
+                BottomNavigation(
+                    backgroundColor = Color.White,
+                ) {
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
+                        label = { Text("Map") },
+                        selected = selectedScreen == Screen.Map,
+                        onClick = { selectedScreen = Screen.Map }
+                    )
+                    BottomNavigationItem(
+                        icon = {
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                imageVector = vectorResource(Res.drawable.my_spots),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("My Spots") },
+                        selected = selectedScreen == Screen.MySpots,
+                        onClick = { selectedScreen = Screen.MySpots }
+                    )
+                    BottomNavigationItem(
+                        icon = {
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                imageVector = vectorResource(Res.drawable.saved_spots),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("Saved Spots") },
+                        selected = selectedScreen == Screen.SavedSpots,
+                        onClick = { selectedScreen = Screen.SavedSpots }
+                    )
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                        label = { Text("User") },
+                        selected = selectedScreen == Screen.User,
+                        onClick = { selectedScreen = Screen.User }
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -98,6 +103,8 @@ fun NavigationBar() {
                     onBackClick = { selectedScreen = Screen.MySpots },
                     addSpotViewModel = AddSpotViewModel()
                 )
+                Screen.Login -> LoginView { selectedScreen = Screen.Terms }
+                Screen.Terms -> TermsView { selectedScreen = Screen.Map }
             }
         }
     }
