@@ -8,3 +8,6 @@ interface GoogleAuthProvider {
 
     suspend fun signOut()
 }
+
+@Composable
+expect fun getGoogleAuthProvider(): GoogleAuthProvider

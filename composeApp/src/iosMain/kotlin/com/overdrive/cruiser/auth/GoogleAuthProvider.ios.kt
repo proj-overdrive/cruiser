@@ -4,8 +4,7 @@ import androidx.compose.runtime.Composable
 import cocoapods.GoogleSignIn.GIDSignIn
 import kotlinx.cinterop.ExperimentalForeignApi
 
-internal class GoogleAuthProviderImpl : GoogleAuthProvider {
-
+class GoogleAuthProviderImpl: GoogleAuthProvider {
     @Composable
     override fun getUiProvider(): GoogleAuthUiProvider = GoogleAuthUiProviderImpl()
 
@@ -14,3 +13,6 @@ internal class GoogleAuthProviderImpl : GoogleAuthProvider {
         GIDSignIn.sharedInstance.signOut()
     }
 }
+
+@Composable
+actual fun getGoogleAuthProvider(): GoogleAuthProvider = GoogleAuthProviderImpl()
