@@ -21,10 +21,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.overdrive.cruiser.endpoints.SearchBoxFetcher
 import com.overdrive.cruiser.models.Coordinate
-import com.overdrive.cruiser.models.Spot
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.*
+import com.overdrive.cruiser.models.MapViewModel
 
 /**
  * A composable that displays a map with a search box and suggestions.
