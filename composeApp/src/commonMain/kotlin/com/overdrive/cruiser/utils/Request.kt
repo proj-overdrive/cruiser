@@ -5,6 +5,8 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
@@ -29,5 +31,17 @@ val httpClient = HttpClient {
 
 suspend inline fun <reified T> requestGet(endpoint: String, baseUrl: String = BASE_URL): T {
     val response: HttpResponse = httpClient.get(baseUrl + endpoint)
+    return response.body()
+}
+
+suspend inline fun <reified R> requestPost(
+    endpoint: String,
+    body: R,
+    baseUrl: String = BASE_URL
+): R {
+    val response: HttpResponse = httpClient.post(baseUrl + endpoint) {
+        contentType(ContentType.Application.Json)
+        setBody(body)
+    }
     return response.body()
 }

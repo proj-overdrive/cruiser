@@ -27,13 +27,15 @@ actual fun SpotMapView(
     contentPadding: PaddingValues,
     location: Coordinate,
     spots: List<Spot>,
+    onSpotSelected: (Spot) -> Unit
 ) {
     val contentPaddingState = remember { MutableStateFlow(contentPadding) }
     val contentLocationState = remember { MutableStateFlow(location) }
     val contentSpotsState = remember { MutableStateFlow(spots) }
+    val contentOnSpotSelected = remember { onSpotSelected }
 
     val factory = remember {
-        mapWithSwiftViewFactory(contentPaddingState, contentLocationState, contentSpotsState)
+        mapWithSwiftViewFactory(contentPaddingState, contentLocationState, contentSpotsState, contentOnSpotSelected)
     }
 
     UIKitViewController(
@@ -51,6 +53,7 @@ internal lateinit var mapWithSwiftViewFactory: (
     contentPaddingState: StateFlow<PaddingValues>,
     contentLocationState: StateFlow<Coordinate>,
     contentSpotsState: StateFlow<List<Spot>>,
+    onSpotSelected: (Spot) -> Unit
 ) -> MapWithSwiftViewFactory
 
 interface MapWithSwiftViewFactory {

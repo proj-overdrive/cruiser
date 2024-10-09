@@ -48,21 +48,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            for (i in 0 until roundedRating) {
-                Image(
-                    modifier = Modifier.size(20.dp),
-                    imageVector = vectorResource(Res.drawable.star_filled),
-                    contentDescription = null
-                )
-            }
-
-            for (i in roundedRating until 5) {
-                Image(
-                    modifier = Modifier.size(20.dp),
-                    imageVector = vectorResource(Res.drawable.star_outline),
-                    contentDescription = null
-                )
-            }
+            RatingStarView(roundedRating)
         }
     }
 }

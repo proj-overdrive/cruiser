@@ -16,7 +16,9 @@ import com.mapbox.maps.extension.compose.DefaultSettingsProvider.defaultLogoSett
 import com.mapbox.maps.extension.compose.DefaultSettingsProvider.defaultScaleBarSettings
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
+import com.mapbox.maps.extension.compose.annotation.generated.CircleAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.CircleAnnotationGroup
+import com.mapbox.maps.plugin.annotation.AnnotationConfig
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
 import com.overdrive.cruiser.models.Coordinate
 import com.overdrive.cruiser.models.Spot
@@ -35,7 +37,8 @@ actual fun SpotMapView(
     modifier: Modifier,
     contentPadding: PaddingValues,
     location: Coordinate,
-    spots: List<Spot>
+    spots: List<Spot>,
+    onSpotSelected: (Spot) -> Unit
 )  = with(LocalDensity.current) {
     val context = LocalContext.current
 
@@ -84,12 +87,21 @@ actual fun SpotMapView(
         compassSettings = compassSettings,
     ) {
         CircleAnnotationGroup(
-            annotations = spots.map { spot ->
-               CircleAnnotationOptions()
-                   .withPoint(Point.fromLngLat(spot.longitude, spot.latitude))
-                   .withCircleColor("#FF0000")
-                   .withCircleRadius(10.0)
-            }
+            annotations = spots.map {
+                CircleAnnotationOptions()
+                    .withPoint(Point.fromLngLat(it.longitude, it.latitude))
+                    .withCircleColor(if (it.isBooked) "#FF0000" else "#00FF00")
+                    .withCircleRadius(10.0)
+            },
+            onClick = { circleAnnotation ->
+                spots.firstOrNull {
+                    it.latitude == circleAnnotation.point.latitude() &&
+                            it.longitude == circleAnnotation.point.longitude()
+                }?.let { spot ->
+                    onSpotSelected(spot)
+                }
+                true
+            },
         )
     }
 

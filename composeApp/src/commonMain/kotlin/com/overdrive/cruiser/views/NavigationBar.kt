@@ -31,8 +31,6 @@ enum class Screen {
 
 /**
  * A composable that displays the app's navigation bar.
- *
- * @param spots The spots to display on the map.
  */
 @Composable
 fun NavigationBar() {
@@ -88,7 +86,7 @@ fun NavigationBar() {
             modifier = Modifier.padding(innerPadding)
         ) {
             when (selectedScreen) {
-                Screen.Map -> MapView(mapViewModel)
+                Screen.Map -> SpotExplorerView(mapViewModel)
                 Screen.User -> UserView(userViewModel)
                 Screen.MySpots -> MySpotsView(mySpotsViewModel) {
                     selectedScreen = Screen.AddSpot

@@ -2,6 +2,7 @@ package com.overdrive.cruiser.endpoints
 
 import com.overdrive.cruiser.models.Spot
 import com.overdrive.cruiser.utils.requestGet
+import com.overdrive.cruiser.utils.requestPost
 
 /**
  * Fetches spots from the server.
@@ -14,6 +15,11 @@ class SpotFetcher {
     suspend fun fetch(): List<Spot> {
         val spots: List<Spot> = fetchSpots()
         return spots
+    }
+
+    suspend fun create(spot: Spot): Spot {
+        val endpoint = "/spots"
+        return requestPost(endpoint, spot)
     }
 
     private suspend fun fetchSpots(): List<Spot> {

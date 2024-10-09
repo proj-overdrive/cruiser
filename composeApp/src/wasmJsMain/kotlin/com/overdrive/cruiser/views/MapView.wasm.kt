@@ -19,7 +19,8 @@ actual fun SpotMapView(
     modifier: Modifier,
     contentPadding: PaddingValues,
     location: Coordinate,
-    spots: List<Spot>
+    spots: List<Spot>,
+    onSpotSelected: (Spot) -> Unit
 ) {
     // TODO: Implement
 }
