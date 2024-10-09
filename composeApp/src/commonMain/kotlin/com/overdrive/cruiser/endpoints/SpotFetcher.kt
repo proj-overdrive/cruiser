@@ -17,6 +17,11 @@ class SpotFetcher {
         return spots
     }
 
+    suspend fun fetchByOwnerId(ownerId: String): List<Spot> {
+        val endpoint = "/spots/$ownerId"
+        return requestGet(endpoint)
+    }
+
     suspend fun create(spot: Spot): Spot {
         val endpoint = "/spots"
         return requestPost(endpoint, spot)

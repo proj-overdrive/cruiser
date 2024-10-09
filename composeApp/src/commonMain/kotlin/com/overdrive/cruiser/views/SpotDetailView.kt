@@ -56,7 +56,7 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))) {
-            SpotOnTopBar(onBack, "Spot Details")
+            SpotOnTopBar("Spot Details", onBack)
 
             Row(
                 modifier = Modifier.padding(16.dp),
