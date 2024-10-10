@@ -34,7 +34,7 @@ enum class Screen {
  */
 @Composable
 fun NavigationBar() {
-    var selectedScreen by remember { mutableStateOf(Screen.AddSpot) }
+    var selectedScreen by remember { mutableStateOf(Screen.Map) }
     val mapViewModel = remember { MapViewModel() }
     val userViewModel = remember { UserViewModel() }
     val mySpotsViewModel = remember { MySpotsViewModel() }
@@ -42,7 +42,6 @@ fun NavigationBar() {
 
     Scaffold(
         bottomBar = {
-
                 BottomNavigation(
                     backgroundColor = Color.White,
                 ) {

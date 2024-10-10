@@ -18,15 +18,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,14 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.overdrive.cruiser.endpoints.SearchBoxFetcher
 import com.overdrive.cruiser.models.AddSpotViewModel
 import com.overdrive.cruiser.models.Coordinate
 import com.overdrive.cruiser.models.Spot
+import com.overdrive.cruiser.models.mapbox.Suggestion
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_off
 import cruiser.composeapp.generated.resources.accessibility_on
@@ -55,7 +49,6 @@ import cruiser.composeapp.generated.resources.weather_off
 import cruiser.composeapp.generated.resources.weather_on
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.vectorResource
-import kotlin.contracts.Effect
 
 
 @Composable
@@ -65,6 +58,7 @@ fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewMod
     var dollarsADay by remember { mutableStateOf("0.0") }
     var accessible by remember { mutableStateOf(true) }
     var sheltered by remember { mutableStateOf(true) }
+    var searchedSuggestion = remember { mutableStateOf<Suggestion?>(null) }
 
     val suggestions by addSpotViewModel.suggestions.collectAsState()
     val query by addSpotViewModel.query.collectAsState()
@@ -247,6 +241,7 @@ fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewMod
                                     focusManager.clearFocus()
                                     addSpotViewModel.updateQuery(suggestion.name)
                                     addSpotViewModel.updateSuggestions(emptyList())
+                                    searchedSuggestion.value = suggestion
                                 },
                             color = Color.DarkGray,
                         )
@@ -315,7 +310,8 @@ fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewMod
 
             Button(
                 onClick = {
-                    val spot = Spot("999", "alyssa", "3915 Braefoot Rd", currentLocation.latitude, currentLocation.longitude)
+                    val address = searchedSuggestion.value?.name ?: "dev spot"
+                    val spot = Spot("999", "dev", address, currentLocation.longitude, currentLocation.latitude)
                     scope.launch {
                         addSpotViewModel.createSpot(spot)
                     }
