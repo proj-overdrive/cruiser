@@ -40,9 +40,6 @@ class MapViewModel {
         _suggestions.value = suggestions
     }
 
-    suspend fun createSpot(spot: Spot) {
-        SpotFetcher().create(spot)
-
     fun updateSelectedSpot(spot: Spot?) {
         _selectedSpot.value = spot
     }

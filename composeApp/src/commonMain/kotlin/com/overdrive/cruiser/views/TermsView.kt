@@ -54,7 +54,7 @@ fun TermsView(onAgree: () -> Unit) {
                 text = "Terms of Service",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = Color.Black,
                 modifier = Modifier
                     .padding(8.dp)
                     .align(Alignment.Start),
