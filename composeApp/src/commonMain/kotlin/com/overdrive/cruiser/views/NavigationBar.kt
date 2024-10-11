@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.vectorResource
  * The different screens that can be displayed in the app.
  */
 enum class Screen {
-    Map, User, MySpots, SavedSpots, AddSpot, Login, Terms
+    Map, User, MySpots, SavedSpots, AddSpot, GetStarted, Login, Terms
 }
 
 /**
@@ -34,7 +34,8 @@ enum class Screen {
  */
 @Composable
 fun NavigationBar() {
-    var selectedScreen by remember { mutableStateOf(Screen.Login) }
+    var selectedScreen by remember { mutableStateOf(Screen.GetStarted) }
+    var noNavBarScreens = listOf(Screen.GetStarted, Screen.Login, Screen.Terms)
     val mapViewModel = remember { MapViewModel() }
     val userViewModel = remember { UserViewModel() }
     val mySpotsViewModel = remember { MySpotsViewModel() }
@@ -42,7 +43,7 @@ fun NavigationBar() {
 
     Scaffold(
         bottomBar = {
-            if (selectedScreen != Screen.Login && selectedScreen != Screen.Terms) {
+            if (noNavBarScreens.contains(selectedScreen).not()) {
 
                 BottomNavigation(
                     backgroundColor = Color.White,
@@ -102,6 +103,7 @@ fun NavigationBar() {
                     onSpotAdded = { selectedScreen = Screen.MySpots },
                     addSpotViewModel = AddSpotViewModel()
                 )
+                Screen.GetStarted -> GetStartedView { selectedScreen = Screen.Login }
                 Screen.Login -> LoginView { selectedScreen = Screen.Terms }
                 Screen.Terms -> TermsView { selectedScreen = Screen.Map }
             }
