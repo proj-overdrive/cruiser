@@ -56,6 +56,7 @@ struct MapSwiftView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var contentPadding: Foundation_layoutPaddingValues?
     @State var spots: [Spot] = []
+    @State var location: Coordinate?
     @State private var viewport: Viewport = Viewport.camera(
         center: .init(latitude: 48.2082, longitude: 16.3719), // Default center coordinates
         zoom: 14, // Default zoom level
@@ -65,13 +66,25 @@ struct MapSwiftView: View {
 
     var body: some View {
         Map(viewport: $viewport) {
+            if let location = location {
+                CircleAnnotation(
+                    centerCoordinate: CLLocationCoordinate2D(
+                        latitude: location.longitude, // Correct order
+                        longitude: location.latitude
+                    )
+                )
+                .circleColor("#007BFF")
+                .circleOpacity(0.7)
+                .circleRadius(15.0)
+            }
             CircleAnnotationGroup(spots){ spot in
                 CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude))
-                    .circleColor(spot.isBooked ? "#FF0000" : "#00FF00")
-                        .circleRadius(10.0)
-                        .onTapGesture {
-                            _ = onSpotSelected(spot)
-                        }
+                    .circleColor(spot.isBooked ? "#FF5733" : "#28A745")
+                    .circleOpacity(0.7)
+                    .circleRadius(10.0)
+                    .onTapGesture {
+                        _ = onSpotSelected(spot)
+                    }
                 }
             .slot("top")
         }
@@ -90,10 +103,11 @@ struct MapSwiftView: View {
         }
         .task {
             for await newLocation in contentLocationState {
+                self.location = newLocation
                 withViewportAnimation(.easeOut(duration: 0.5)) {
                     viewport = Viewport.camera(
                         center: .init(latitude: newLocation.longitude, longitude: newLocation.latitude),
-                        zoom: 10,
+                        zoom: 13,
                         bearing: 0,
                         pitch: 0
                     )

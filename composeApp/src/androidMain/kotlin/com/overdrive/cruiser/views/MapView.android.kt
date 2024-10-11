@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import com.mapbox.geojson.Point
@@ -86,11 +87,18 @@ actual fun SpotMapView(
         attributionSettings = attributionSettings,
         compassSettings = compassSettings,
     ) {
+        CircleAnnotation(
+            point = Point.fromLngLat(location.latitude, location.longitude),
+            circleColorString = "#007BFF",
+            circleOpacity = 0.7,
+            circleRadius = 15.0,
+        )
         CircleAnnotationGroup(
             annotations = spots.map {
                 CircleAnnotationOptions()
                     .withPoint(Point.fromLngLat(it.longitude, it.latitude))
-                    .withCircleColor(if (it.isBooked) "#FF0000" else "#00FF00")
+                    .withCircleColor(if (it.isBooked) "#FF5733" else "#28A745")
+                    .withCircleOpacity(0.7)
                     .withCircleRadius(10.0)
             },
             onClick = { circleAnnotation ->
@@ -109,7 +117,7 @@ actual fun SpotMapView(
         mapViewportState.easeTo(
             com.mapbox.maps.CameraOptions.Builder()
                 .center(Point.fromLngLat(location.latitude, location.longitude))
-                .zoom(10.0)
+                .zoom(13.0)
                 .build()
         )
     }
