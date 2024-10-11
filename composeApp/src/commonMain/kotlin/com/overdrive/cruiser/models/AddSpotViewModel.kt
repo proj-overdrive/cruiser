@@ -29,4 +29,8 @@ class AddSpotViewModel {
     fun updateSuggestions(suggestions: List<Suggestion>) {
         _suggestions.value = suggestions
     }
+
+    suspend fun createSpot(spot: Spot) {
+        SpotFetcher().create(spot)
+    }
 }

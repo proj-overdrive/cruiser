@@ -42,44 +42,46 @@ fun NavigationBar() {
 
     Scaffold(
         bottomBar = {
-            BottomNavigation(
-                backgroundColor = Color.White,
-            ) {
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
-                    label = { Text("Map") },
-                    selected = selectedScreen == Screen.Map,
-                    onClick = { selectedScreen = Screen.Map }
-                )
-                BottomNavigationItem(
-                    icon = {
-                        Image(
-                            modifier = Modifier.size(20.dp),
-                            imageVector = vectorResource(Res.drawable.my_spots),
-                            contentDescription = null
-                        )},
-                    label = { Text("My Spots") },
-                    selected = selectedScreen == Screen.MySpots,
-                    onClick = { selectedScreen = Screen.MySpots }
-                )
-                BottomNavigationItem(
-                    icon = {
-                        Image(
-                            modifier = Modifier.size(20.dp),
-                            imageVector = vectorResource(Res.drawable.saved_spots),
-                            contentDescription = null
-                        )},
-                    label = { Text("Saved Spots") },
-                    selected = selectedScreen == Screen.SavedSpots,
-                    onClick = { selectedScreen = Screen.SavedSpots }
-                )
-                BottomNavigationItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    label = { Text("User") },
-                    selected = selectedScreen == Screen.User,
-                    onClick = { selectedScreen = Screen.User }
-                )
-            }
+                BottomNavigation(
+                    backgroundColor = Color.White,
+                ) {
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
+                        label = { Text("Map") },
+                        selected = selectedScreen == Screen.Map,
+                        onClick = { selectedScreen = Screen.Map }
+                    )
+                    BottomNavigationItem(
+                        icon = {
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                imageVector = vectorResource(Res.drawable.my_spots),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("My Spots") },
+                        selected = selectedScreen == Screen.MySpots,
+                        onClick = { selectedScreen = Screen.MySpots }
+                    )
+                    BottomNavigationItem(
+                        icon = {
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                imageVector = vectorResource(Res.drawable.saved_spots),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("Saved Spots") },
+                        selected = selectedScreen == Screen.SavedSpots,
+                        onClick = { selectedScreen = Screen.SavedSpots }
+                    )
+                    BottomNavigationItem(
+                        icon = { Icon(Icons.Default.Person, contentDescription = null) },
+                        label = { Text("User") },
+                        selected = selectedScreen == Screen.User,
+                        onClick = { selectedScreen = Screen.User }
+                    )
+                }
         }
     ) { innerPadding ->
         Box(
@@ -94,6 +96,7 @@ fun NavigationBar() {
                 Screen.SavedSpots -> SavedSpotsView(savedSpotsViewModel)
                 Screen.AddSpot -> AddSpotView(
                     onBackClick = { selectedScreen = Screen.MySpots },
+                    onSpotAdded = { selectedScreen = Screen.MySpots },
                     addSpotViewModel = AddSpotViewModel()
                 )
             }

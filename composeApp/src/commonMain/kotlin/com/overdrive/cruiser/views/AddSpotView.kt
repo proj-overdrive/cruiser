@@ -18,15 +18,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,13 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.overdrive.cruiser.endpoints.SearchBoxFetcher
 import com.overdrive.cruiser.models.AddSpotViewModel
 import com.overdrive.cruiser.models.Coordinate
+import com.overdrive.cruiser.models.Spot
+import com.overdrive.cruiser.models.mapbox.Suggestion
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_off
 import cruiser.composeapp.generated.resources.accessibility_on
@@ -57,20 +52,22 @@ import org.jetbrains.compose.resources.vectorResource
 
 
 @Composable
-fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
+fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewModel: AddSpotViewModel) {
     val scope = rememberCoroutineScope()
     var dollarsAnHour by remember { mutableStateOf("0.0") }
     var dollarsADay by remember { mutableStateOf("0.0") }
     var accessible by remember { mutableStateOf(true) }
     var sheltered by remember { mutableStateOf(true) }
+    var searchedSuggestion = remember { mutableStateOf<Suggestion?>(null) }
 
     val suggestions by addSpotViewModel.suggestions.collectAsState()
     val query by addSpotViewModel.query.collectAsState()
+    val currentLocation by addSpotViewModel.currentLocation.collectAsState()
     val suggestionGenerator = remember { SearchBoxFetcher() }
     val focusManager = LocalFocusManager.current
 
     Column(modifier = Modifier.fillMaxWidth().background(color = Color(0xFFF5F5F5))) {
-        SpotOnTopBar(onBackClick, "Add Spot")
+        SpotOnTopBar("Add Spot", onBackClick)
 
         Column(modifier = Modifier.padding(16.dp)) {
 
@@ -244,6 +241,7 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
                                     focusManager.clearFocus()
                                     addSpotViewModel.updateQuery(suggestion.name)
                                     addSpotViewModel.updateSuggestions(emptyList())
+                                    searchedSuggestion.value = suggestion
                                 },
                             color = Color.DarkGray,
                         )
@@ -264,7 +262,8 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
                     .background(color = Color.LightGray)
             ) {
                 Button(
-                    onClick = {},
+                    onClick = {
+                    },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -311,8 +310,12 @@ fun AddSpotView(onBackClick: () -> Unit, addSpotViewModel: AddSpotViewModel) {
 
             Button(
                 onClick = {
-                    /* TODO: Add spot to database */
-                },
+                    val address = searchedSuggestion.value?.name ?: "dev spot"
+                    val spot = Spot("999", "dev", address, currentLocation.longitude, currentLocation.latitude)
+                    scope.launch {
+                        addSpotViewModel.createSpot(spot)
+                    }
+                    onSpotAdded() },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
                 modifier = Modifier
                     .fillMaxWidth()

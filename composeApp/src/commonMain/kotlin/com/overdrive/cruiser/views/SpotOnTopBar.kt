@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SpotOnTopBar(onBackClick: () -> Unit, title: String) {
+fun SpotOnTopBar(title: String, onBackClick: (() -> Unit)? = null) {
     TopAppBar(
         backgroundColor = Color.White,
         modifier = Modifier.shadow(8.dp),
@@ -29,14 +29,17 @@ fun SpotOnTopBar(onBackClick: () -> Unit, title: String) {
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                IconButton(
-                    onClick = onBackClick,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Outlined.ArrowBack,
-                        contentDescription = "Back"
-                    )
+                if (onBackClick != null) {
+                    // only include back arrow if onBackClick is provided
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
                 }
 
                 Text(

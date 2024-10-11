@@ -7,4 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 class MySpotsViewModel {
     private val _spots = MutableStateFlow(emptyList<Spot>())
     val spots: StateFlow<List<Spot>> = _spots
+
+    suspend fun updateSpots() {
+        _spots.value = SpotFetcher().fetch()
+    }
 }
