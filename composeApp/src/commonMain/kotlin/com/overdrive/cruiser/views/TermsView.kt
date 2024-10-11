@@ -29,18 +29,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cruiser.composeapp.generated.resources.Res
-import cruiser.composeapp.generated.resources.background_image
+import cruiser.composeapp.generated.resources.house_image
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun TermsView(onAgree: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Image(
-            painter = painterResource(Res.drawable.background_image),
+            painter = painterResource(Res.drawable.house_image),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth()
+                .align(Alignment.BottomCenter),
             contentScale = ContentScale.Crop
         )
+
 
         Column(modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
@@ -49,7 +51,7 @@ fun TermsView(onAgree: () -> Unit) {
             Spacer(modifier = Modifier.height(140.dp))
 
             Text(
-                text = "Connect",
+                text = "Terms of Service",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -62,8 +64,8 @@ fun TermsView(onAgree: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = Color.Black.copy(alpha = 0.5f))
+                    .clip(RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp))
+                    .background(color = Color.Black.copy(alpha = 0.3f))
                     .padding(24.dp),
             ) {
                 Box (modifier = Modifier.padding(16.dp)) {
