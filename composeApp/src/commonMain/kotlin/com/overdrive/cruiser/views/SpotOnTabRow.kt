@@ -14,10 +14,6 @@ import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,8 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SpotOnTabRow(tabs: List<String>, tabContent: @Composable (Int) -> Unit) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
+fun SpotOnTabRow(tabs: List<String>, selectedTabIndex: Int, onTabSelected: (Int) -> Unit, tabContent: @Composable (Int) -> Unit) {
 
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         TabRow(
@@ -44,7 +39,7 @@ fun SpotOnTabRow(tabs: List<String>, tabContent: @Composable (Int) -> Unit) {
             tabs.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
+                    onClick = { onTabSelected(index) },
                     modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .background(
