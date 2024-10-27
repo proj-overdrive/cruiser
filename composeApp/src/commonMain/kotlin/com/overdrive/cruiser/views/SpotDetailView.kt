@@ -182,8 +182,8 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                             )
                             scope.launch {
                                 bookingEndpoint.create(booking)
+                                onBack()
                             }
-                            onBack()
                         }
                     ) {
                         Text("Book Now", color = Color.White)

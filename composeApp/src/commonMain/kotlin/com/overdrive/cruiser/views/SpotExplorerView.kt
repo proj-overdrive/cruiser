@@ -14,12 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.overdrive.cruiser.models.MapViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun SpotExplorerView(mapViewModel: MapViewModel) {
+    val scope = rememberCoroutineScope()
     val selectedSpot by mapViewModel.selectedSpot.collectAsState()
 
     Box {
@@ -42,7 +45,12 @@ fun SpotExplorerView(mapViewModel: MapViewModel) {
             if (spot != null) {
                 SpotDetailView(
                     spot = spot,
-                    onBack = { mapViewModel.updateSelectedSpot(null) }
+                    onBack = {
+                        mapViewModel.updateSelectedSpot(null)
+                        scope.launch {
+                            mapViewModel.updateSpots()
+                        }
+                    }
                 )
             } else {
                 Box(modifier = Modifier.fillMaxSize().background(Color.Transparent))
