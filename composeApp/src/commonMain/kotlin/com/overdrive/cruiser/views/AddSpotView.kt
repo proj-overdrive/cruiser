@@ -311,7 +311,7 @@ fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewMod
             Button(
                 onClick = {
                     val address = searchedSuggestion.value?.name ?: "dev spot"
-                    val spot = Spot("999", "dev", address, currentLocation.longitude, currentLocation.latitude)
+                    val spot = Spot("999", "dev3", address, currentLocation.longitude, currentLocation.latitude)
                     scope.launch {
                         addSpotViewModel.createSpot(spot)
                     }

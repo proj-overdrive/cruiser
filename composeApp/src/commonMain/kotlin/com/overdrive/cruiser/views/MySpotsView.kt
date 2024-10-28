@@ -54,7 +54,7 @@ fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) 
                 .align(Alignment.Center)
                 .padding(16.dp)
             ) {
-                val spot = spots.firstOrNull { it.ownerId == "alyssa" }
+                val spot = spots.firstOrNull { it.ownerId == "dev3" }
 
                 if (spot == null) {
                     Text(text = "No spots yet, add one!",
@@ -137,19 +137,20 @@ fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) 
                         }
                     }
 
-                    Spacer(modifier = Modifier.weight(1f))
 
-                    Button(
-                        onClick = onAddSpotClick,
-                        shape = CircleShape,
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .clip(CircleShape)
-                            .size(64.dp)
-                    ) {
-                        Text("+")
-                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(
+                    onClick = onAddSpotClick,
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .clip(CircleShape)
+                        .size(64.dp)
+                ) {
+                    Text("+")
                 }
             }
         }
