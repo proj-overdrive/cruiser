@@ -36,6 +36,12 @@ fun DatePickerView(state: DatePickerState, onBack: () -> Unit) {
             headline = null
         )
 
+        SpotOnTimePicker(title = "Start Time")
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        SpotOnTimePicker(title = "End Time")
+
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
