@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.overdrive.cruiser.models.AddSpotViewModel
 import com.overdrive.cruiser.models.MapViewModel
 import com.overdrive.cruiser.models.MySpotsViewModel
-import com.overdrive.cruiser.models.SavedSpotsViewModel
+import com.overdrive.cruiser.models.BookingsViewModel
 import com.overdrive.cruiser.models.UserViewModel
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.my_spots
@@ -26,7 +26,7 @@ import org.jetbrains.compose.resources.vectorResource
  * The different screens that can be displayed in the app.
  */
 enum class Screen {
-    Map, User, MySpots, SavedSpots, AddSpot, GetStarted, Login, Terms
+    Map, User, MySpots, Bookings, AddSpot, GetStarted, Login, Terms
 }
 
 /**
@@ -39,7 +39,7 @@ fun NavigationBar() {
     val mapViewModel = remember { MapViewModel() }
     val userViewModel = remember { UserViewModel() }
     val mySpotsViewModel = remember { MySpotsViewModel() }
-    val savedSpotsViewModel = remember { SavedSpotsViewModel() }
+    val bookingsViewModel = remember { BookingsViewModel() }
 
     Scaffold(
         bottomBar = {
@@ -58,6 +58,18 @@ fun NavigationBar() {
                         icon = {
                             Image(
                                 modifier = Modifier.size(20.dp),
+                                imageVector = vectorResource(Res.drawable.saved_spots),
+                                contentDescription = null
+                            )
+                        },
+                        label = { Text("Bookings") },
+                        selected = selectedScreen == Screen.Bookings,
+                        onClick = { selectedScreen = Screen.Bookings }
+                    )
+                    BottomNavigationItem(
+                        icon = {
+                            Image(
+                                modifier = Modifier.size(20.dp),
                                 imageVector = vectorResource(Res.drawable.my_spots),
                                 contentDescription = null
                             )
@@ -65,18 +77,6 @@ fun NavigationBar() {
                         label = { Text("My Spots") },
                         selected = selectedScreen == Screen.MySpots,
                         onClick = { selectedScreen = Screen.MySpots }
-                    )
-                    BottomNavigationItem(
-                        icon = {
-                            Image(
-                                modifier = Modifier.size(20.dp),
-                                imageVector = vectorResource(Res.drawable.saved_spots),
-                                contentDescription = null
-                            )
-                        },
-                        label = { Text("Saved Spots") },
-                        selected = selectedScreen == Screen.SavedSpots,
-                        onClick = { selectedScreen = Screen.SavedSpots }
                     )
                     BottomNavigationItem(
                         icon = { Icon(Icons.Default.Person, contentDescription = null) },
@@ -97,7 +97,7 @@ fun NavigationBar() {
                 Screen.MySpots -> MySpotsView(mySpotsViewModel) {
                     selectedScreen = Screen.AddSpot
                 }
-                Screen.SavedSpots -> SavedSpotsView(savedSpotsViewModel)
+                Screen.Bookings -> BookingsView(bookingsViewModel)
                 Screen.AddSpot -> AddSpotView(
                     onBackClick = { selectedScreen = Screen.MySpots },
                     onSpotAdded = { selectedScreen = Screen.MySpots },

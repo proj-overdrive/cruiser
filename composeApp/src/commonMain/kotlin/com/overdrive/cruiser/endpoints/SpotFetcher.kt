@@ -13,17 +13,17 @@ class SpotFetcher {
      * Fetches spots from the server.
      */
     suspend fun fetch(): List<Spot> {
-        val spots: List<Spot> = fetchSpots()
-        return spots
+        val endpoint = "/spots"
+        return requestGet(endpoint)
+    }
+
+    suspend fun fetch(id: String): Spot {
+        val endpoint = "/spots/$id"
+        return requestGet(endpoint)
     }
 
     suspend fun create(spot: Spot): Spot {
         val endpoint = "/spots"
         return requestPost(endpoint, spot)
-    }
-
-    private suspend fun fetchSpots(): List<Spot> {
-        val endpoint = "/spots"
-        return requestGet(endpoint)
     }
 }

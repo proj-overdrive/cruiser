@@ -19,7 +19,6 @@ fun SpotOnField(
 ) {
     Box(
         modifier = modifier
-            .height(55.dp)
             .shadow(12.dp, RoundedCornerShape(12.dp))
             .background(
                 color = Color.White,
