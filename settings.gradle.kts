@@ -36,6 +36,8 @@ dependencyResolutionManagement {
         }
         // To support WASM
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+        google()
+        maven("https://jitpack.io")
     }
 }
 
