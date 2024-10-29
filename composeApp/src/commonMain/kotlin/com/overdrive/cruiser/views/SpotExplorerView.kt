@@ -10,6 +10,8 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,10 +22,13 @@ import androidx.compose.ui.graphics.Color
 import com.overdrive.cruiser.models.MapViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpotExplorerView(mapViewModel: MapViewModel) {
     val scope = rememberCoroutineScope()
     val selectedSpot by mapViewModel.selectedSpot.collectAsState()
+    val showFiltering by mapViewModel.showFiltering.collectAsState()
+    val datePickerState = rememberDatePickerState()
 
     Box {
         LaunchedEffect(selectedSpot){
@@ -47,6 +52,29 @@ fun SpotExplorerView(mapViewModel: MapViewModel) {
                     spot = spot,
                     onBack = {
                         mapViewModel.updateSelectedSpot(null)
+                        scope.launch {
+                            mapViewModel.updateSpots()
+                        }
+                    }
+                )
+            } else {
+                Box(modifier = Modifier.fillMaxSize().background(Color.Transparent))
+            }
+        }
+
+        AnimatedContent(
+            targetState = showFiltering,
+            transitionSpec = {
+                slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) + fadeIn() togetherWith
+                        slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) + fadeOut() using
+                        SizeTransform(clip = false)
+            }
+        ) {
+            if (showFiltering) {
+                DatePickerView(
+                    state = datePickerState,
+                    onBack = {
+                        mapViewModel.setShowFiltering(false)
                         scope.launch {
                             mapViewModel.updateSpots()
                         }

@@ -1,7 +1,9 @@
 package com.overdrive.cruiser.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,37 +25,41 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerView(state: DatePickerState, onBack: () -> Unit) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        DatePicker(
-            state = state,
-            colors = DatePickerDefaults.colors(
-                todayContentColor = Color.Black,
-                todayDateBorderColor = Color(0xFFF9784B),
-                selectedDayContainerColor = Color(0xFFF9784B),
-            ),
-            showModeToggle = false,
-            title = null,
-            headline = null
-        )
+    Column (Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))) {
+        SpotOnTopBar("Filter Spots") { onBack() }
 
-        SpotOnTimePicker(title = "Start Time")
+        Column(modifier = Modifier.padding(16.dp)) {
+            DatePicker(
+                state = state,
+                colors = DatePickerDefaults.colors(
+                    todayContentColor = Color.Black,
+                    todayDateBorderColor = Color(0xFFF9784B),
+                    selectedDayContainerColor = Color(0xFFF9784B),
+                ),
+                showModeToggle = false,
+                title = null,
+                headline = null
+            )
 
-        Spacer(modifier = Modifier.height(8.dp))
+            SpotOnTimePicker(title = "Start Time")
 
-        SpotOnTimePicker(title = "End Time")
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Spacer(modifier = Modifier.weight(1f))
+            SpotOnTimePicker(title = "End Time")
 
-        Button(
-            onClick = { onBack() },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp)
-                .shadow(8.dp, RoundedCornerShape(12.dp))
-                .clip(RoundedCornerShape(12.dp))
-        ) {
-            Text("Submit", color = Color.White)
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = { onBack() },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .shadow(8.dp, RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                Text("Submit", color = Color.White)
+            }
         }
     }
 }
