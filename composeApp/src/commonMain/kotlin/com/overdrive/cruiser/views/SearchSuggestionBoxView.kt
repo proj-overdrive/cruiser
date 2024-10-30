@@ -6,9 +6,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -25,7 +28,10 @@ import androidx.compose.ui.unit.dp
 import com.overdrive.cruiser.endpoints.SearchBoxFetcher
 import com.overdrive.cruiser.models.Coordinate
 import com.overdrive.cruiser.models.MapViewModel
+import cruiser.composeapp.generated.resources.Res
+import cruiser.composeapp.generated.resources.filter
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun SearchSuggestionBoxView(modifier: Modifier, mapViewModel: MapViewModel) {
@@ -67,6 +73,16 @@ fun SearchSuggestionBoxView(modifier: Modifier, mapViewModel: MapViewModel) {
             ),
             shape = RoundedCornerShape(30.dp),
             interactionSource = remember { MutableInteractionSource() },
+            trailingIcon = {
+                IconButton(onClick = { mapViewModel.setShowFiltering(true) }) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.filter),
+                        contentDescription = null,
+                        modifier = Modifier.size(35.dp).padding(end = 16.dp),
+                        tint = Color.Gray
+                    )
+                }
+            }
         )
 
         // Display search suggestions as a dropdown below the search bar

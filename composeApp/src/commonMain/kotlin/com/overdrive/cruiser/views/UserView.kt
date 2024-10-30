@@ -3,6 +3,7 @@ package com.overdrive.cruiser.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -44,11 +47,11 @@ fun UserView(userViewModel: UserViewModel, onLogOut: () -> Unit) {
     Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
     ) {
         Column(modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(color = Color(0xFFF5F5F5))
             .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Image(
                 modifier = Modifier
                     .size(100.dp)
@@ -56,67 +59,104 @@ fun UserView(userViewModel: UserViewModel, onLogOut: () -> Unit) {
                 imageVector = vectorResource(Res.drawable.profile_picture),
                 contentDescription = null
             )
-            Spacer(modifier = Modifier.height(36.dp))
-            Column {
-                Text("Preferences")
-                ProfileButton(
-                    "Notifications",
-                    Res.drawable.notification,
-                    onClick = { /*TODO*/ })
-                ProfileButton(
-                    "Personal Information",
-                    Res.drawable.email,
-                    onClick = { /*TODO*/ })
-                ProfileButton(
-                    "Login & Security",
-                    Res.drawable.phone,
-                    onClick = { /*TODO*/ })
-                ProfileButton(
-                    "Rental History",
-                    Res.drawable.clock,
-                    onClick = { /*TODO*/ })
+            Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("Billing")
-                ProfileButton(
-                    "Payment Methods",
-                    Res.drawable.payment,
-                    onClick = { /*TODO*/ })
-                ProfileButton(
-                    "Billing Address",
-                    Res.drawable.location,
-                    onClick = { /*TODO*/ })
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text("Other")
-                ProfileButton(
-                    "Report a Problem",
-                    Res.drawable.report,
-                    onClick = { /*TODO*/ })
-                ProfileButton(
-                    "Security Policy",
-                    Res.drawable.security,
-                    onClick = { /*TODO*/ })
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = { onLogOut() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(45.dp)
-                    .padding(2.dp)
-                    .shadow(4.dp, RoundedCornerShape(12.dp))
-                    .clip(RoundedCornerShape(12.dp))
+            Box(
+                Modifier.fillMaxSize()
             ) {
-                Text(
-                    text = "Log Out",
-                    modifier = Modifier.padding(0.dp, 4.dp),
-                    color = Color.White
-                )
+                LazyColumn(
+                    Modifier.padding(bottom = 64.dp)
+                ) {
+                    item {
+                        Text("Preferences")
+                    }
+                    item {
+                        ProfileButton(
+                            "Notifications",
+                            Res.drawable.notification,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        ProfileButton(
+                            "Personal Information",
+                            Res.drawable.email,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        ProfileButton(
+                            "Login & Security",
+                            Res.drawable.phone,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        ProfileButton(
+                            "Rental History",
+                            Res.drawable.clock,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    item {
+                        Text("Billing")
+                    }
+                    item {
+                        ProfileButton(
+                            "Payment Methods",
+                            Res.drawable.payment,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        ProfileButton(
+                            "Billing Address",
+                            Res.drawable.location,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    item {
+                        Text("Other")
+                    }
+                    item {
+                        ProfileButton(
+                            "Report a Problem",
+                            Res.drawable.report,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                    item {
+                        ProfileButton(
+                            "Security Policy",
+                            Res.drawable.security,
+                            onClick = { /*TODO*/ }
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = { onLogOut() },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp)
+                        .padding(2.dp)
+                        .shadow(4.dp, RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(12.dp))
+                        .align(Alignment.BottomCenter)
+                ) {
+                    Text(
+                        text = "Log Out",
+                        modifier = Modifier.padding(0.dp, 4.dp),
+                        color = Color.White
+                    )
+                }
             }
         }
     }
