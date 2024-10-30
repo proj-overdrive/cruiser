@@ -2,14 +2,18 @@ package com.overdrive.cruiser.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.overdrive.cruiser.models.AddSpotViewModel
@@ -44,9 +48,11 @@ fun NavigationBar() {
     Scaffold(
         bottomBar = {
             if (noNavBarScreens.contains(selectedScreen).not()) {
-
                 BottomNavigation(
                     backgroundColor = Color.White,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
                 ) {
                     BottomNavigationItem(
                         icon = { Icon(Icons.Default.LocationOn, contentDescription = null) },
@@ -88,8 +94,11 @@ fun NavigationBar() {
             }
         }
     ) { innerPadding ->
+        val bottomPadding = maxOf(innerPadding.calculateBottomPadding() - 10.dp, 0.dp)
         Box(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = bottomPadding)
         ) {
             when (selectedScreen) {
                 Screen.Map -> SpotExplorerView(mapViewModel)

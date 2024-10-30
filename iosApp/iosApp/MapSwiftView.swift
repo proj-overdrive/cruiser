@@ -58,8 +58,8 @@ struct MapSwiftView: View {
     @State var spots: [Spot] = []
     @State var location: Coordinate?
     @State private var viewport: Viewport = Viewport.camera(
-        center: .init(latitude: 48.2082, longitude: 16.3719), // Default center coordinates
-        zoom: 14, // Default zoom level
+        center: .init(latitude: 48.2082, longitude: 16.3719),
+        zoom: 14,
         bearing: 0,
         pitch: 0
     )
@@ -69,7 +69,7 @@ struct MapSwiftView: View {
             if let location = location {
                 CircleAnnotation(
                     centerCoordinate: CLLocationCoordinate2D(
-                        latitude: location.longitude, // Correct order
+                        latitude: location.longitude,
                         longitude: location.latitude
                     )
                 )
@@ -77,16 +77,22 @@ struct MapSwiftView: View {
                 .circleOpacity(0.7)
                 .circleRadius(15.0)
             }
-            CircleAnnotationGroup(spots){ spot in
-                CircleAnnotation(centerCoordinate: CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude))
-                    .circleColor(spot.isBooked ? "#FF5733" : "#28A745")
-                    .circleOpacity(0.7)
-                    .circleRadius(10.0)
-                    .onTapGesture {
-                        _ = onSpotSelected(spot)
-                    }
+            
+            ForEvery(spots.filter { spot in
+                isValidCoordinate(latitude: spot.latitude, longitude: spot.longitude)}
+            ){ spot in
+                MapViewAnnotation(coordinate: .init(latitude: spot.latitude, longitude: spot.longitude)) {
+                    let image = spot.isBooked ? "not-parking-icon" : "parking-icon"
+                    Image(image)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .onTapGesture {
+                            if !spot.isBooked {
+                                _ = onSpotSelected(spot)
+                            }
+                        }
                 }
-            .slot("top")
+            }
         }
         .ornamentOptions(
             OrnamentOptions(
@@ -94,7 +100,7 @@ struct MapSwiftView: View {
                 attributionButton: AttributionButtonOptions(margins: CGPoint(x: CGFloat(8.0), y: CGFloat($contentPadding.wrappedValue?.calculateBottomPadding() ?? 0.0)))
             )
         )
-        .mapStyle(.standard(lightPreset: colorScheme == .light ? .day : .dusk))
+        .mapStyle(MapStyle(uri: StyleURI(rawValue: "mapbox://styles/proj-overdrive/cm2w2fyoo003i01q28u9f1ooa") ?? .light))
         .ignoresSafeArea()
         .task {
             for await contentPadding in contentPaddingState {
@@ -119,6 +125,10 @@ struct MapSwiftView: View {
                 self.spots = newSpots
             }
         }
+    }
+    
+    func isValidCoordinate(latitude: Double, longitude: Double) -> Bool {
+        return latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180
     }
 }
 

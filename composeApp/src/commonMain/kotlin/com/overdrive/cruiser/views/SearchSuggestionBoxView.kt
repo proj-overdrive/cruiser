@@ -1,5 +1,6 @@
 package com.overdrive.cruiser.views
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,6 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -42,13 +44,17 @@ fun SearchSuggestionBoxView(modifier: Modifier, mapViewModel: MapViewModel) {
     val suggestionGenerator = remember { SearchBoxFetcher() }
     val focusManager = LocalFocusManager.current
 
+    val backgroundColor by animateColorAsState(
+        targetValue = if (suggestions.isEmpty()) Color.Transparent else Color.White
+    )
+
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(backgroundColor)
             .padding(8.dp)
     ) {
-        OutlinedTextField(
+        TextField(
             value = query,
             onValueChange = {
                 mapViewModel.updateQuery(it)
@@ -62,14 +68,15 @@ fun SearchSuggestionBoxView(modifier: Modifier, mapViewModel: MapViewModel) {
             },
             label = { Text("Search") },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.White,
                 cursorColor = Color.Gray,
-                focusedBorderColor = Color.Gray,
                 focusedLabelColor = Color.DarkGray,
                 textColor = Color.DarkGray,
-                unfocusedBorderColor = Color.Gray,
                 unfocusedLabelColor = Color.Gray,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(30.dp),
             interactionSource = remember { MutableInteractionSource() },

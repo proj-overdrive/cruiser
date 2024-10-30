@@ -47,6 +47,7 @@ import com.overdrive.cruiser.endpoints.BookingEndpoint
 import com.overdrive.cruiser.models.Booking
 import com.overdrive.cruiser.models.BookingStatus
 import com.overdrive.cruiser.models.Spot
+import com.overdrive.cruiser.utils.TimeRange
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_on
 import cruiser.composeapp.generated.resources.saved_spots
@@ -60,6 +61,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.vectorResource
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,11 +71,14 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
     var isDatePickerVisible by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf(0) }
 
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
-        .atStartOfDayIn(TimeZone.currentSystemDefault())
-        .toEpochMilliseconds())
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault()).date
+            .atStartOfDayIn(TimeZone.currentSystemDefault())
+            .toEpochMilliseconds()
+    )
+
+    var selectedTimeRange by remember { mutableStateOf<TimeRange?>(null) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -92,7 +97,11 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                 ) {
                     DatePickerView(
                         state = datePickerState,
-                        onBack = { isDatePickerVisible = false }
+                        onBack = { isDatePickerVisible = false },
+                        onSelected = {
+                            selectedTimeRange = it
+                            isDatePickerVisible = false
+                        }
                     )
                 }
             } else {
@@ -137,7 +146,7 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                                 modifier = Modifier.size(24.dp),
                                 imageVector = Icons.Filled.FavoriteBorder,
                                 contentDescription = "Bookmark",
-                                tint = Color.Black // Optional: set the color of the icon
+                                tint = Color.Black
                             )
                         }
                     }
@@ -176,6 +185,8 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
 
                         val tabs = listOf("Hourly", "Daily", "Schedule")
                         var hoursToBook by remember { mutableStateOf("1") }
+                        var timeToBook by remember{ mutableStateOf(1.hours) }
+
                         SpotOnTabRow(
                             tabs = tabs,
                             selectedTabIndex = selectedTab,
@@ -184,22 +195,30 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                             when (selectedTab) {
                                 0 -> SpotOnTextField(
                                     value = hoursToBook,
-                                    onValueChange = { hoursToBook = it },
+                                    onValueChange = { newValue ->
+                                        hoursToBook = newValue
+                                        val hours = newValue.toIntOrNull() ?: 1
+                                        timeToBook = hours.hours
+                                    },
                                     label = "Hours to Book",
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Number
                                     ),
                                     modifier = Modifier.fillMaxWidth()
-                                )  // Show content for option 1
+                                )
                                 1 -> SpotOnTextField(
                                     value = hoursToBook,
-                                    onValueChange = { hoursToBook = it },
+                                    onValueChange = { newValue ->
+                                        hoursToBook = newValue
+                                        val days = newValue.toIntOrNull() ?: 1
+                                        timeToBook = days.days
+                                    },
                                     label = "Days to Book",
                                     keyboardOptions = KeyboardOptions.Default.copy(
                                         keyboardType = KeyboardType.Number
                                     ),
                                     modifier = Modifier.fillMaxWidth()
-                                )  // Show content for option 2
+                                )
                                 2 -> SpotOnField(modifier = Modifier.fillMaxWidth().height(55.dp)) {
                                     Row(
                                         modifier = Modifier.padding(16.dp),
@@ -221,7 +240,7 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                                             )
                                         }
                                     }
-                                } // Show content for option 3
+                                }
                             }
 
                         // Displaying content below based on the selected tab
@@ -245,14 +264,15 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                                     )
                                 ),
                                 onClick = {
+                                    // TODO: since we aren't including seconds, we subtract 1 minute from the start time
+                                    val startTime = selectedTimeRange?.startTime() ?: Clock.System.now().minus(1.minutes).toLocalDateTime(TimeZone.currentSystemDefault())
+                                    val endTime = selectedTimeRange?.endTime() ?: Clock.System.now().plus(timeToBook).toLocalDateTime(TimeZone.currentSystemDefault())
                                     val booking = Booking(
                                         id = "1234",
                                         parkingSpotId = spot.id,
                                         userId = "1234",
-                                        startTime = Clock.System.now()
-                                            .toLocalDateTime(TimeZone.currentSystemDefault()),
-                                        endTime = Clock.System.now().plus(1.hours)
-                                            .toLocalDateTime(TimeZone.currentSystemDefault()),
+                                        startTime = startTime,
+                                        endTime = endTime,
                                         totalPrice = 0.0,
                                         bookingStatus = BookingStatus.PENDING,
                                         vehicleLicensePlate = "1234"

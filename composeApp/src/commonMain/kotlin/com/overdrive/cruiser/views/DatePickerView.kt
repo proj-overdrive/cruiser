@@ -15,16 +15,29 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.overdrive.cruiser.models.MapViewModel
+import com.overdrive.cruiser.utils.TimeRange
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerView(state: DatePickerState, onBack: () -> Unit) {
+fun DatePickerView(state: DatePickerState, onBack: () -> Unit, onSelected: (TimeRange) -> Unit) {
+    val start = rememberTimePickerState(initialHour = 0, initialMinute = 0)
+    val end = rememberTimePickerState(initialHour = 0, initialMinute = 0)
+
     Column (Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))) {
         SpotOnTopBar("Filter Spots") { onBack() }
 
@@ -41,16 +54,24 @@ fun DatePickerView(state: DatePickerState, onBack: () -> Unit) {
                 headline = null
             )
 
-            SpotOnTimePicker(title = "Start Time")
+            SpotOnTimePicker(start, title = "Start Time")
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            SpotOnTimePicker(title = "End Time")
+            SpotOnTimePicker(end, title = "End Time")
 
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { onBack() },
+                onClick = {
+                    val selectedDateMillis = state.selectedDateMillis ?: Clock.System.now().toEpochMilliseconds()
+                    val range = TimeRange(
+                        combineDateAndTime(selectedDateMillis, start.hour, start.minute),
+                        combineDateAndTime(selectedDateMillis, end.hour, end.minute)
+                    )
+                    onSelected(range)
+                    onBack()
+               },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,4 +83,14 @@ fun DatePickerView(state: DatePickerState, onBack: () -> Unit) {
             }
         }
     }
+}
+
+fun combineDateAndTime(selectedDateMillis: Long, hour: Int, minute: Int = 0): LocalDateTime {
+    // Convert the selectedDateMillis to a LocalDate
+    // TODO: Why is it one day off
+    val selectedDate = Instant.fromEpochMilliseconds(selectedDateMillis).plus(1.days)
+        .toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+    // Combine LocalDate with the selected time to create a LocalDateTime
+    return LocalDateTime(selectedDate.year, selectedDate.month, selectedDate.dayOfMonth, hour, minute)
 }

@@ -3,6 +3,7 @@ package com.overdrive.cruiser.models
 import com.overdrive.cruiser.endpoints.BookingEndpoint
 import com.overdrive.cruiser.endpoints.SpotFetcher
 import com.overdrive.cruiser.models.mapbox.Suggestion
+import com.overdrive.cruiser.utils.TimeRange
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -26,7 +27,10 @@ class MapViewModel {
     val bookings: StateFlow<List<Booking>> = _bookings
 
     private val _showFiltering = MutableStateFlow(false)
-    var showFiltering: StateFlow<Boolean> = _showFiltering
+    val showFiltering: StateFlow<Boolean> = _showFiltering
+
+    private val _timeRange = MutableStateFlow(TimeRange.now())
+    val timeRange: StateFlow<TimeRange> = _timeRange
 
     fun updateCurrentLocation(location: Coordinate) {
         _currentLocation.value = location
@@ -48,12 +52,22 @@ class MapViewModel {
         _showFiltering.value = state
     }
 
-    suspend fun updateSpots() {
-        _bookings.value = BookingEndpoint().fetch()
-        _spots.value = SpotFetcher().fetch()
+    fun updateTimeRange(range: TimeRange) {
+        _timeRange.value = range
+    }
 
-        for (spot in _spots.value) {
-            spot.isBooked = _bookings.value.any { it.parkingSpotId == spot.id }
+    suspend fun updateSpots() {
+        val fetchedSpots = SpotFetcher().fetch()
+        val bookings = BookingEndpoint().fetch()
+
+        _spots.value = fetchedSpots.map { spot ->
+            val isBooked = bookings.filter {
+                booking -> booking.parkingSpotId == spot.id
+            }.any {
+                val bookingRange = TimeRange(it.startTime, it.endTime)
+                bookingRange.overlap(_timeRange.value)
+            }
+            spot.copy(isBooked = isBooked)
         }
     }
 }
