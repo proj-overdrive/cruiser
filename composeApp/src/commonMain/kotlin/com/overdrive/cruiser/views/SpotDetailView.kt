@@ -89,8 +89,6 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
             if (visible) {
                 Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
                 ) {
-                    SpotOnTopBar("Select Date") { isDatePickerVisible = false }
-
                     DatePickerView(
                         state = datePickerState,
                         onBack = { isDatePickerVisible = false }

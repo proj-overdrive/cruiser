@@ -2,9 +2,6 @@ package com.overdrive.cruiser.models
 
 import com.overdrive.cruiser.endpoints.BookingEndpoint
 import com.overdrive.cruiser.endpoints.SpotFetcher
-import com.overdrive.cruiser.models.Booking
-import com.overdrive.cruiser.models.Coordinate
-import com.overdrive.cruiser.models.Spot
 import com.overdrive.cruiser.models.mapbox.Suggestion
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +25,9 @@ class MapViewModel {
     private val _bookings = MutableStateFlow(emptyList<Booking>())
     val bookings: StateFlow<List<Booking>> = _bookings
 
+    private val _showFiltering = MutableStateFlow(false)
+    var showFiltering: StateFlow<Boolean> = _showFiltering
+
     fun updateCurrentLocation(location: Coordinate) {
         _currentLocation.value = location
     }
@@ -42,6 +42,10 @@ class MapViewModel {
 
     fun updateSelectedSpot(spot: Spot?) {
         _selectedSpot.value = spot
+    }
+
+    fun setShowFiltering(state: Boolean) {
+        _showFiltering.value = state
     }
 
     suspend fun updateSpots() {
