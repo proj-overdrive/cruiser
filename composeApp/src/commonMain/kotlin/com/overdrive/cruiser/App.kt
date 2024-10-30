@@ -6,33 +6,21 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.overdrive.cruiser.models.Coordinate
+import com.overdrive.cruiser.utils.LocationProvider
 import com.overdrive.cruiser.views.NavigationBar
-import dev.jordond.compass.geolocation.Geolocator
-import dev.jordond.compass.geolocation.GeolocatorResult
-import dev.jordond.compass.geolocation.mobile
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
+    var currentCoordinates by remember { mutableStateOf(Coordinate.DEFAULT) }
+
     MaterialTheme {
-        val geoLocation = remember { Geolocator.mobile() }
-
+        val locationProvider = remember { LocationProvider() }
         LaunchedEffect(Unit) {
-            when (val result = geoLocation.current()) {
-                is GeolocatorResult.Success -> {
-                    println("LOCATION: ${result.data.coordinates}")
-                }
-                is GeolocatorResult.Error -> when (result) {
-                    is GeolocatorResult.NotSupported -> println("LOCATION ERROR: ${result.message}")
-                    is GeolocatorResult.NotFound -> println("LOCATION ERROR: ${result.message}")
-                    is GeolocatorResult.PermissionError -> println("LOCATION ERROR: ${result.message}")
-                    is GeolocatorResult.GeolocationFailed -> println("LOCATION ERROR: ${result.message}")
-                    else -> println("LOCATION ERROR: ${result.message}")
-                }
-            }
+            Coordinate.initializeDefaultLocation(locationProvider)
         }
-
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             NavigationBar()
         }
