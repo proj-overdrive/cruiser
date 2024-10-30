@@ -2,6 +2,7 @@ package com.overdrive.cruiser.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -58,12 +59,13 @@ fun SpotOnTabRow(tabs: List<String>, selectedTabIndex: Int, onTabSelected: (Int)
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-    ) {
-        tabContent(selectedTabIndex)
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            tabContent(selectedTabIndex)
+        }
     }
 }
 
