@@ -69,7 +69,7 @@ fun SpotExplorerView(mapViewModel: MapViewModel) {
                         slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) + fadeOut() using
                         SizeTransform(clip = false)
             }
-        ) {
+        ) { showFiltering ->
             if (showFiltering) {
                 DatePickerView(
                     state = datePickerState,
