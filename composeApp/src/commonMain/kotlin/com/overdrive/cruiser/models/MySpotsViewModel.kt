@@ -11,4 +11,8 @@ class MySpotsViewModel {
     suspend fun updateSpots() {
         _spots.value = SpotFetcher().fetch()
     }
+
+    suspend fun deleteSpot(spot: Spot) {
+        SpotFetcher().delete(spot)
+    }
 }

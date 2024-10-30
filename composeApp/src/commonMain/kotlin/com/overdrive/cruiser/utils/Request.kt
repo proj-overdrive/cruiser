@@ -6,6 +6,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -44,4 +45,16 @@ suspend inline fun <reified R> requestPost(
         setBody(body)
     }
     return response.body()
+}
+
+suspend inline fun <reified R> requestDelete(
+    endpoint: String,
+    body: R,
+    baseUrl: String = BASE_URL
+): HttpStatusCode {
+    val response: HttpResponse = httpClient.delete(baseUrl + endpoint) {
+        contentType(ContentType.Application.Json)
+        setBody(body)
+    }
+    return response.status
 }

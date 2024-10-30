@@ -2,6 +2,7 @@ package com.overdrive.cruiser.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,12 +38,16 @@ import com.overdrive.cruiser.models.MySpotsViewModel
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_on
 import cruiser.composeapp.generated.resources.weather_on
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) {
 
     val spots by mySpotsViewModel.spots.collectAsState()
+    val scope = rememberCoroutineScope()
+    var showDialog by remember { mutableStateOf(false) }
+    val spot = spots.firstOrNull { it.ownerId == "dev3" }
 
     Column {
         SpotOnTopBar("My Spot")
@@ -54,7 +63,6 @@ fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) 
                 .align(Alignment.Center)
                 .padding(16.dp)
             ) {
-                val spot = spots.firstOrNull { it.ownerId == "dev3" }
 
                 if (spot == null) {
                     Text(text = "No spots yet, add one!",
@@ -135,6 +143,31 @@ fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) 
                                 color = Color.White
                             )
                         }
+
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    showDialog = true
+                                }
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.White,
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(55.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .border(2.dp, Color(0xFFF9784B), RoundedCornerShape(12.dp))
+                        ) {
+                            Text(
+                                text = "Delete Spot",
+                                color = Color(0xFFF9784B),
+                            )
+                        }
+
                     }
 
 
@@ -154,5 +187,21 @@ fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) 
                 }
             }
         }
+    }
+    if (showDialog) {
+        SpotOnAlertDialog(
+            "Confirm Deletion",
+            "Are you sure you want to delete this spot?",
+            onClick = {
+                scope.launch {
+                    spot?.let {
+                        mySpotsViewModel.deleteSpot(spot)
+                        mySpotsViewModel.updateSpots()
+                    }
+                    showDialog = false
+                }
+            },
+            onDismissRequest = { showDialog = false }
+        )
     }
 }
