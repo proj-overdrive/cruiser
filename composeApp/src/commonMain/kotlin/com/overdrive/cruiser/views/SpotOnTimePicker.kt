@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -34,11 +35,11 @@ import org.jetbrains.compose.resources.vectorResource
 fun SpotOnTimePicker(timePickerState: TimePickerState, title: String, modifier: Modifier = Modifier) {
     var showTimePicker by remember { mutableStateOf(false) }
 
-    SpotOnField(modifier = modifier.fillMaxWidth()) {
+    SpotOnField(modifier = modifier.fillMaxWidth().height(65.dp)) {
         Row(modifier = modifier.padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically) {
 
-            Column(modifier = modifier.padding(bottom = 8.dp)) {
+            Column {
                 Text(text = title, fontSize = 12.sp, color = Color.Gray)
 
                 val selectedHour = timePickerState.hour

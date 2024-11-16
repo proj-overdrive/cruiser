@@ -31,170 +31,213 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.overdrive.cruiser.models.BookingsViewModel
 import com.overdrive.cruiser.models.MySpotsViewModel
+import com.overdrive.cruiser.models.Spot
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_on
 import cruiser.composeapp.generated.resources.weather_on
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
-fun MySpotsView(mySpotsViewModel: MySpotsViewModel, onAddSpotClick: () -> Unit) {
-
-    val spots by mySpotsViewModel.spots.collectAsState()
-    val scope = rememberCoroutineScope()
-    var showDialog by remember { mutableStateOf(false) }
-    val spot = spots.firstOrNull { it.ownerId == "dev3" }
+fun MySpotsView(mySpotsViewModel: MySpotsViewModel, bookingsViewModel: BookingsViewModel,
+                onAddSpotClick: () -> Unit) {
+    var selectedSpot by remember { mutableStateOf<Spot?>(null) }
 
     Column {
-        SpotOnTopBar("My Spot")
-        LaunchedEffect(Unit) {
-            mySpotsViewModel.updateSpots()
+        if (selectedSpot != null) {
+            MySpotInformation(mySpotsViewModel, selectedSpot!!, onAddSpotClick) { selectedSpot = null }
+        } else {
+            MySpotsList(mySpotsViewModel, bookingsViewModel, onAddSpotClick, onSpotSelected = {
+                selectedSpot = it
+            })
         }
+    }
+}
 
-        Box(modifier = Modifier.fillMaxSize()) {
+@Composable
+fun MySpotsList(mySpotsViewModel: MySpotsViewModel, bookingsViewModel: BookingsViewModel,
+                onAddSpotClick: () -> Unit, onSpotSelected: (Spot) -> Unit) {
+    val allSpots by mySpotsViewModel.spots.collectAsState()
+    val devSpots = allSpots.filter { it.ownerId == "dev3" }
 
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color(0xFFF5F5F5))
-                .align(Alignment.Center)
-                .padding(16.dp)
+    val allBookings by bookingsViewModel.bookings.collectAsState()
+    val currentTime = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) }
+
+    val devSpotIds = devSpots.map { it.id }
+    val ownerBookings = allBookings.filter { booking -> booking.parkingSpotId in devSpotIds }
+        .filter { it.endTime > currentTime && it.startTime < currentTime }
+
+    val bookedSpots = ownerBookings.map { booking ->
+        devSpots.first { it.id == booking.parkingSpotId }
+    }
+    val unbookedSpots = devSpots.filter { it !in bookedSpots }
+
+    LaunchedEffect(Unit) {
+        bookingsViewModel.updateBookings()
+        mySpotsViewModel.updateSpots()
+    }
+
+    Column(modifier = Modifier.background(color = Color(0xFFF5F5F5))) {
+        SpotOnTopBar("My Spots")
+
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+        ) {
+            Column {
+                val tabs = listOf("Available", "Booked")
+                var selectedTab by remember { mutableStateOf(0) }
+                SpotOnTabRow(
+                    tabs = tabs,
+                    selectedTabIndex = selectedTab,
+                    { selectedTab = it }
+                ) { i -> selectedTab = i }
+                when (selectedTab) {
+                    0 -> SpotOnSpotList(unbookedSpots, Color(0xFF006400), onClick = onSpotSelected)
+                    1 -> SpotOnSpotList(bookedSpots, Color.LightGray, onClick = onSpotSelected)
+                }
+            }
+
+            Button(
+                onClick = onAddSpotClick,
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .clip(CircleShape)
+                    .padding(bottom = 24.dp)
+                    .size(64.dp)
+                    .shadow(4.dp, CircleShape)
             ) {
-
-                if (spot == null) {
-                    Text(text = "No spots yet, add one!",
-                        modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally),
-                        color = Color.Black,
-                        textAlign = TextAlign.Center,
-                    )
-                } else {
-
-                    Box(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth().align(Alignment.CenterStart)) {
-                            Image(
-                                modifier = Modifier.size(24.dp),
-                                imageVector = vectorResource(Res.drawable.accessibility_on),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Image(
-                                modifier = Modifier.size(24.dp),
-                                imageVector = vectorResource(Res.drawable.weather_on),
-                                contentDescription = null
-                            )
-                        }
-
-                        Row(modifier = Modifier.align(Alignment.Center)) {
-                            RatingStarView(4)
-                        }
-
-                        Icon(
-                            modifier = Modifier.size(24.dp).align(Alignment.CenterEnd),
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = "Share",
-                            tint = Color.Black
-                        )
-                    }
-
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        SpotOnField(modifier = Modifier.fillMaxWidth()) {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(spot.address)
-                            }
-                        }
-                        SpotOnField(modifier = Modifier.fillMaxWidth()) {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text("$5/hour")
-                                Spacer(modifier = Modifier.weight(1f))
-                                Text("$40/day")
-                            }
-                        }
-                        SpotOnField(modifier = Modifier.fillMaxWidth()) {
-                            Row(
-                                modifier = Modifier.padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text("226 total bookings")
-                            }
-                        }
-                        Button(
-                            onClick = { onAddSpotClick() },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(55.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                        ) {
-                            Text(
-                                text = "Edit Spot",
-                                color = Color.White
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Button(
-                            onClick = {
-                                scope.launch {
-                                    showDialog = true
-                                }
-                            },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color.White,
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(55.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .border(2.dp, Color(0xFFF9784B), RoundedCornerShape(12.dp))
-                        ) {
-                            Text(
-                                text = "Delete Spot",
-                                color = Color(0xFFF9784B),
-                            )
-                        }
-
-                    }
-
-
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-                Button(
-                    onClick = onAddSpotClick,
-                    shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .clip(CircleShape)
-                        .size(64.dp)
-                ) {
-                    Text("+")
-                }
+                Text("+")
             }
         }
     }
+}
+
+@Composable
+fun MySpotInformation(mySpotsViewModel: MySpotsViewModel, spot: Spot, onAddSpotClick: () -> Unit,
+                      onBackClick: () -> Unit) {
+    var showDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    Column {
+        SpotOnTopBar("My Spot", onBackClick = onBackClick)
+
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(modifier = Modifier.fillMaxWidth().align(Alignment.CenterStart)) {
+                Image(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = vectorResource(Res.drawable.accessibility_on),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                Image(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = vectorResource(Res.drawable.weather_on),
+                    contentDescription = null
+                )
+            }
+
+            Row(modifier = Modifier.align(Alignment.Center)) {
+                RatingStarView(4)
+            }
+
+            Icon(
+                modifier = Modifier.size(24.dp).align(Alignment.CenterEnd),
+                imageVector = Icons.Filled.Share,
+                contentDescription = "Share",
+                tint = Color.Black
+            )
+        }
+
+        Column(modifier = Modifier.padding(16.dp)) {
+            SpotOnField(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(spot.address)
+                }
+            }
+            SpotOnField(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("$5/hour")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text("$40/day")
+                }
+            }
+            SpotOnField(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("226 total bookings")
+                }
+            }
+            Button(
+                onClick = { onAddSpotClick() },
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                Text(
+                    text = "Edit Spot",
+                    color = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        showDialog = true
+                    }
+                },
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.White,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .border(2.dp, Color(0xFFF9784B), RoundedCornerShape(12.dp))
+            ) {
+                Text(
+                    text = "Delete Spot",
+                    color = Color(0xFFF9784B),
+                )
+            }
+        }
+    }
+
     if (showDialog) {
         SpotOnAlertDialog(
             "Confirm Deletion",
             "Are you sure you want to delete this spot?",
             onClick = {
+                onBackClick()
                 scope.launch {
-                    spot?.let {
+                    spot.let {
                         mySpotsViewModel.deleteSpot(spot)
                         mySpotsViewModel.updateSpots()
                     }

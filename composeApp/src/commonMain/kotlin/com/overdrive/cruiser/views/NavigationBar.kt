@@ -103,7 +103,7 @@ fun NavigationBar() {
             when (selectedScreen) {
                 Screen.Map -> SpotExplorerView(mapViewModel)
                 Screen.User -> UserView(userViewModel, onLogOut = { selectedScreen = Screen.Login })
-                Screen.MySpots -> MySpotsView(mySpotsViewModel) {
+                Screen.MySpots -> MySpotsView(mySpotsViewModel, bookingsViewModel) {
                     selectedScreen = Screen.AddSpot
                 }
                 Screen.Bookings -> BookingsView(bookingsViewModel)

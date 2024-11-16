@@ -13,8 +13,8 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.overdrive.cruiser.models.MapViewModel
+import com.overdrive.cruiser.models.mapbox.DatePickerModel
 import com.overdrive.cruiser.utils.TimeRange
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -30,13 +30,15 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerView(state: DatePickerState, onBack: () -> Unit, onSelected: (TimeRange) -> Unit) {
-    val start = rememberTimePickerState(initialHour = 0, initialMinute = 0)
-    val end = rememberTimePickerState(initialHour = 0, initialMinute = 0)
+fun DatePickerView(datePickerModel: DatePickerModel, onBack: () -> Unit, onSelected: (TimeRange) -> Unit) {
+    val state = rememberDatePickerState(initialSelectedDateMillis = datePickerModel.selectedDate.value)
+    val start = rememberTimePickerState(initialHour = datePickerModel.startHour.value,
+        initialMinute = datePickerModel.startMinute.value)
+    val end = rememberTimePickerState(initialHour = datePickerModel.endHour.value,
+        initialMinute = datePickerModel.endMinute.value)
 
     Column (Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))) {
         SpotOnTopBar("Filter Spots") { onBack() }
@@ -69,6 +71,8 @@ fun DatePickerView(state: DatePickerState, onBack: () -> Unit, onSelected: (Time
                         combineDateAndTime(selectedDateMillis, start.hour, start.minute),
                         combineDateAndTime(selectedDateMillis, end.hour, end.minute)
                     )
+                    datePickerModel.updateSelectedTimes(start.hour, start.minute, end.hour, end.minute)
+                    datePickerModel.updateSelectedDate(selectedDateMillis)
                     onSelected(range)
                     onBack()
                },
