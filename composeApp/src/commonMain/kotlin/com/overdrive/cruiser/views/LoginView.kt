@@ -13,8 +13,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +38,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun LoginView(onAuthenticated: () -> Unit) {
+fun LoginView(onAuthenticated: () -> Unit, onBackClick: () -> Unit) {
     var signedInUser: GoogleUser? by remember { mutableStateOf(null) }
 
     GoogleButtonUiContainer(onGoogleSignInResult = { googleUser ->
@@ -50,6 +54,15 @@ fun LoginView(onAuthenticated: () -> Unit) {
 
         Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
             SpotOnLoginBackground(modifier = Modifier.align(Alignment.BottomCenter))
+
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier.padding(16.dp).size(24.dp).align(Alignment.TopStart),
+            ) {
+                Icon(Icons.AutoMirrored.Outlined.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
 
             Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
 
