@@ -1,11 +1,9 @@
 package com.overdrive.cruiser.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,19 +22,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.overdrive.cruiser.auth.GoogleUser
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.apple_logo
 import cruiser.composeapp.generated.resources.facebook_logo
 import cruiser.composeapp.generated.resources.google_logo
-import cruiser.composeapp.generated.resources.house_image
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -55,133 +49,73 @@ fun LoginView(onAuthenticated: () -> Unit) {
         val onGoogleClick = { this.onClick() }
 
         Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
-            Image(
-                painter = painterResource(Res.drawable.house_image),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth()
-                    .align(Alignment.BottomCenter),
-                contentScale = ContentScale.Crop
-            )
+            SpotOnLoginBackground(modifier = Modifier.align(Alignment.BottomCenter))
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Spacer(modifier = Modifier.height(140.dp))
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
 
-                Text(
-                    text = "Connect",
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .align(Alignment.Start),
+                SpotOnBranding(modifier = Modifier.align(Alignment.CenterHorizontally))
+
+                Spacer(modifier = Modifier.height(54.dp))
+
+                SpotOnLoginButton(
+                    platform = "Google",
+                    onClick = onGoogleClick,
+                    logo = Res.drawable.google_logo,
+                    iconModifier = Modifier.padding(start = 5.dp).size(50.dp)
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(24.dp, 24.dp, 0.dp, 0.dp))
-                        .background(color = Color.Black.copy(alpha = 0.3f))
-                        .padding(24.dp),
-                ) {
-                    Button(
-                        onClick = { onGoogleClick() },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(55.dp)
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp))
-                            .background(color = Color.White),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
-                        ),
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.google_logo),
-                                contentDescription = null,
-                                tint = Color.Unspecified,
-                                modifier = Modifier
-                                    .align(Alignment.CenterStart)
-                                    .size(50.dp),
-                            )
-                            Text(
-                                text = "Continue With Google",
-                                color = contentColorFor(Color.Black),
-                            )
-                        }
-                    }
+                Spacer(modifier = Modifier.height(16.dp))
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                SpotOnLoginButton(
+                    platform = "Apple",
+                    onClick = onGoogleClick,
+                    logo = Res.drawable.apple_logo,
+                    iconModifier = Modifier.padding(start = 11.dp)
+                )
 
-                    Button(
-                        onClick = { onGoogleClick() },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(55.dp)
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp))
-                            .background(color = Color.White),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
-                        ),
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.apple_logo),
-                                contentDescription = null,
-                                tint = Color.Unspecified,
-                                modifier = Modifier.align(Alignment.CenterStart)
-                                    .padding(start = 11.dp)
-                            )
+                Spacer(modifier = Modifier.height(16.dp))
 
-                            Text(
-                                text = "Continue With Apple",
-                                color = contentColorFor(Color.Black),
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = { onGoogleClick() },
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(55.dp)
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp))
-                            .background(color = Color.White),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.White,
-                        ),
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.facebook_logo),
-                                contentDescription = null,
-                                tint = Color.Unspecified,
-                                modifier = Modifier.align(Alignment.CenterStart)
-                                    .padding(start = 10.dp)
-                            )
-
-                            Text(
-                                text = "Continue With Facebook",
-                                color = contentColorFor(Color.Black),
-                            )
-                        }
-                    }
-                }
+                SpotOnLoginButton(
+                    platform = "Facebook",
+                    onClick = onGoogleClick,
+                    logo = Res.drawable.facebook_logo,
+                    iconModifier = Modifier.padding(start = 10.dp)
+                )
             }
+        }
+    }
+}
+
+@Composable
+fun SpotOnLoginButton(platform: String, onClick: () -> Unit, logo: DrawableResource,
+                      iconModifier: Modifier = Modifier) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(55.dp)
+            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp)),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.LightGray,
+        ),
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(logo),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = iconModifier.align(Alignment.CenterStart)
+                    .padding(start = 11.dp)
+            )
+
+            Text(
+                text = "Continue With $platform",
+                color = contentColorFor(Color.Black),
+            )
         }
     }
 }
