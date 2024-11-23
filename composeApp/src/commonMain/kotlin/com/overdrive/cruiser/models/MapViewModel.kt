@@ -32,6 +32,9 @@ class MapViewModel {
     private val _timeRange = MutableStateFlow(TimeRange.now())
     val timeRange: StateFlow<TimeRange> = _timeRange
 
+    private val _offlineServers = MutableStateFlow<Boolean?>(null)
+    val offLineServers: StateFlow<Boolean?> = _offlineServers
+
     fun updateCurrentLocation(location: Coordinate) {
         _currentLocation.value = location
     }
@@ -56,13 +59,19 @@ class MapViewModel {
         _timeRange.value = range
     }
 
+    fun updateServerStatus(state: Boolean) {
+        _offlineServers.value = state
+    }
+
     suspend fun updateSpots() {
         val fetchedSpots = SpotFetcher().fetch()
         val bookings = BookingEndpoint().fetch()
 
+        updateServerStatus(fetchedSpots.isEmpty() && bookings.isEmpty())
+
         _spots.value = fetchedSpots.map { spot ->
             val isBooked = bookings.filter {
-                booking -> booking.parkingSpotId == spot.id
+                    booking -> booking.parkingSpotId == spot.id
             }.any {
                 val bookingRange = TimeRange(it.startTime, it.endTime)
                 bookingRange.overlap(_timeRange.value)
@@ -71,3 +80,4 @@ class MapViewModel {
         }
     }
 }
+
