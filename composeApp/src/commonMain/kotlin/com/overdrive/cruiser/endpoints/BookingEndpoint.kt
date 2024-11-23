@@ -7,13 +7,21 @@ import com.overdrive.cruiser.utils.requestPost
 
 class BookingEndpoint {
     suspend fun fetch(): List<Booking> {
-        val endpoint = "/bookings"
-        return requestGet(endpoint)
+        try {
+            val endpoint = "/bookings"
+            return requestGet(endpoint)
+        } catch (e : Exception) {
+            return listOf()
+        }
     }
 
     suspend fun fetch(spot: Spot): List<Booking> {
-        val endpoint = "/bookings/${spot.id}"
-        return requestGet(endpoint)
+        try {
+            val endpoint = "/bookings/${spot.id}"
+            return requestGet(endpoint)
+        } catch (e : Exception) {
+            return listOf()
+        }
     }
 
     suspend fun create(booking: Booking): Booking {
