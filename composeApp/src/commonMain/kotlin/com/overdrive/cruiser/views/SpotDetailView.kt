@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -94,7 +92,8 @@ fun SpotDetailView(datePickerModel: DatePickerModel, spot: Spot, onBack: () -> U
             }
         ) { visible ->
             if (visible) {
-                Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
+                Column(
+                    modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
                 ) {
                     DatePickerView(
                         datePickerModel = datePickerModel,
@@ -106,7 +105,8 @@ fun SpotDetailView(datePickerModel: DatePickerModel, spot: Spot, onBack: () -> U
                     )
                 }
             } else {
-                Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
+                Column(
+                    modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
                 ) {
 
                     SpotOnTopBar("Spot Details", onBack)
@@ -186,63 +186,67 @@ fun SpotDetailView(datePickerModel: DatePickerModel, spot: Spot, onBack: () -> U
 
                         val tabs = listOf("Hourly", "Daily", "Schedule")
                         var hoursToBook by remember { mutableStateOf("1") }
-                        var timeToBook by remember{ mutableStateOf(1.hours) }
+                        var timeToBook by remember { mutableStateOf(1.hours) }
 
                         SpotOnTabRow(
                             tabs = tabs,
                             selectedTabIndex = selectedTab,
                             { selectedTab = it }
                         ) { i -> selectedTab = i }
-                            when (selectedTab) {
-                                0 -> SpotOnTextField(
-                                    value = hoursToBook,
-                                    onValueChange = { newValue ->
-                                        hoursToBook = newValue
-                                        val hours = newValue.toIntOrNull() ?: 1
-                                        timeToBook = hours.hours
-                                    },
-                                    label = "Hours to Book",
-                                    keyboardOptions = KeyboardOptions.Default.copy(
-                                        keyboardType = KeyboardType.Number
-                                    ),
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                1 -> SpotOnTextField(
-                                    value = hoursToBook,
-                                    onValueChange = { newValue ->
-                                        hoursToBook = newValue
-                                        val days = newValue.toIntOrNull() ?: 1
-                                        timeToBook = days.days
-                                    },
-                                    label = "Days to Book",
-                                    keyboardOptions = KeyboardOptions.Default.copy(
-                                        keyboardType = KeyboardType.Number
-                                    ),
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                2 -> SpotOnField(modifier = Modifier.fillMaxWidth().height(55.dp)) {
-                                    Row(
-                                        modifier = Modifier.padding(16.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        val selectedDate = datePickerState.selectedDateMillis?.let {
-                                            Instant.fromEpochMilliseconds(
-                                                it + 1.days.inWholeMilliseconds
-                                            ).toLocalDateTime(TimeZone.currentSystemDefault())
-                                        }
-                                        Text(
-                                            text = "${selectedDate?.dayOfMonth} ${selectedDate?.month?.name?.lowercase()?.capitalize()} ${selectedDate?.year}"
+                        when (selectedTab) {
+                            0 -> SpotOnTextField(
+                                value = hoursToBook,
+                                onValueChange = { newValue ->
+                                    hoursToBook = newValue
+                                    val hours = newValue.toIntOrNull() ?: 1
+                                    timeToBook = hours.hours
+                                },
+                                label = "Hours to Book",
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Number
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            1 -> SpotOnTextField(
+                                value = hoursToBook,
+                                onValueChange = { newValue ->
+                                    hoursToBook = newValue
+                                    val days = newValue.toIntOrNull() ?: 1
+                                    timeToBook = days.days
+                                },
+                                label = "Days to Book",
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Number
+                                ),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            2 -> SpotOnField(modifier = Modifier.fillMaxWidth().height(55.dp)) {
+                                Row(
+                                    modifier = Modifier.padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    val selectedDate = datePickerState.selectedDateMillis?.let {
+                                        Instant.fromEpochMilliseconds(
+                                            it + 1.days.inWholeMilliseconds
+                                        ).toLocalDateTime(TimeZone.currentSystemDefault())
+                                    }
+                                    Text(
+                                        text = "${selectedDate?.dayOfMonth} ${
+                                            selectedDate?.month?.name?.lowercase()?.capitalize()
+                                        } ${selectedDate?.year}"
+                                    )
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    IconButton(onClick = { isDatePickerVisible = true }) {
+                                        Icon(
+                                            imageVector = vectorResource(Res.drawable.saved_spots),
+                                            contentDescription = null
                                         )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        IconButton(onClick = { isDatePickerVisible = true }) {
-                                            Icon(
-                                                imageVector = vectorResource(Res.drawable.saved_spots),
-                                                contentDescription = null
-                                            )
-                                        }
                                     }
                                 }
                             }
+                        }
 
                         // Displaying content below based on the selected tab
                         Box(
@@ -254,20 +258,22 @@ fun SpotDetailView(datePickerModel: DatePickerModel, spot: Spot, onBack: () -> U
                             }
                         }
 
-                        SpotOnField(modifier = Modifier.fillMaxWidth()) {
-                            Button(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(55.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color(
-                                        0xFFF9784B
-                                    )
-                                ),
-                                onClick = {
+                        SpotOnField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(55.dp)
+                        ) {
+                            StripePaymentView(
+                                amount = 50,
+                                onComplete = {
                                     // TODO: since we aren't including seconds, we subtract 1 minute from the start time
-                                    val startTime = selectedTimeRange?.startTime() ?: Clock.System.now().minus(1.minutes).toLocalDateTime(TimeZone.currentSystemDefault())
-                                    val endTime = selectedTimeRange?.endTime() ?: Clock.System.now().plus(timeToBook).toLocalDateTime(TimeZone.currentSystemDefault())
+                                    val startTime =
+                                        selectedTimeRange?.startTime() ?: Clock.System.now()
+                                            .minus(1.minutes)
+                                            .toLocalDateTime(TimeZone.currentSystemDefault())
+                                    val endTime = selectedTimeRange?.endTime() ?: Clock.System.now()
+                                        .plus(timeToBook)
+                                        .toLocalDateTime(TimeZone.currentSystemDefault())
                                     val booking = Booking(
                                         id = "1234",
                                         parkingSpotId = spot.id,
@@ -282,10 +288,9 @@ fun SpotDetailView(datePickerModel: DatePickerModel, spot: Spot, onBack: () -> U
                                         bookingEndpoint.create(booking)
                                         onBack()
                                     }
-                                }
-                            ) {
-                                Text("Book Now", color = Color.White)
-                            }
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
                         }
                     }
                 }
