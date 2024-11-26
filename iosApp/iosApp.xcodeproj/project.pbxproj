@@ -12,6 +12,10 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		4036732C2CA330B100C30C77 /* MapSwiftView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4036732B2CA330B100C30C77 /* MapSwiftView.swift */; };
 		4036732F2CA331B200C30C77 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 4036732E2CA331B200C30C77 /* MapboxMaps */; };
+		40B7DCD32CF52F3300CBF33B /* StripePaymentsUI in Frameworks */ = {isa = PBXBuildFile; productRef = 40B7DCD22CF52F3300CBF33B /* StripePaymentsUI */; };
+		40B7DCD52CF5344A00CBF33B /* StripePaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B7DCD42CF5344A00CBF33B /* StripePaymentView.swift */; };
+		40B7DCD72CF5464600CBF33B /* StripePaymentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B7DCD62CF5464600CBF33B /* StripePaymentHandler.swift */; };
+		40B7DCD92CF5466E00CBF33B /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 40B7DCD82CF5466E00CBF33B /* StripePaymentSheet */; };
 		40F016BD2CB0CE4C001E8687 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 40F016BC2CB0CE4C001E8687 /* GoogleSignIn */; };
 		40F016BF2CB0CE4C001E8687 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 40F016BE2CB0CE4C001E8687 /* GoogleSignInSwift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
@@ -22,6 +26,8 @@
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
 		4036732B2CA330B100C30C77 /* MapSwiftView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSwiftView.swift; sourceTree = "<group>"; };
+		40B7DCD42CF5344A00CBF33B /* StripePaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentView.swift; sourceTree = "<group>"; };
+		40B7DCD62CF5464600CBF33B /* StripePaymentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentHandler.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* cruiser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = cruiser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -35,7 +41,9 @@
 			files = (
 				40F016BF2CB0CE4C001E8687 /* GoogleSignInSwift in Frameworks */,
 				4036732F2CA331B200C30C77 /* MapboxMaps in Frameworks */,
+				40B7DCD32CF52F3300CBF33B /* StripePaymentsUI in Frameworks */,
 				40F016BD2CB0CE4C001E8687 /* GoogleSignIn in Frameworks */,
+				40B7DCD92CF5466E00CBF33B /* StripePaymentSheet in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +92,8 @@
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
 				4036732B2CA330B100C30C77 /* MapSwiftView.swift */,
+				40B7DCD42CF5344A00CBF33B /* StripePaymentView.swift */,
+				40B7DCD62CF5464600CBF33B /* StripePaymentHandler.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -117,6 +127,8 @@
 				4036732E2CA331B200C30C77 /* MapboxMaps */,
 				40F016BC2CB0CE4C001E8687 /* GoogleSignIn */,
 				40F016BE2CB0CE4C001E8687 /* GoogleSignInSwift */,
+				40B7DCD22CF52F3300CBF33B /* StripePaymentsUI */,
+				40B7DCD82CF5466E00CBF33B /* StripePaymentSheet */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* cruiser.app */;
@@ -150,6 +162,7 @@
 			packageReferences = (
 				4036732D2CA331B200C30C77 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
 				40F016BB2CB0CE4C001E8687 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				40B7DCD12CF52F3300CBF33B /* XCRemoteSwiftPackageReference "stripe-ios-spm" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -198,8 +211,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40B7DCD72CF5464600CBF33B /* StripePaymentHandler.swift in Sources */,
 				4036732C2CA330B100C30C77 /* MapSwiftView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				40B7DCD52CF5344A00CBF33B /* StripePaymentView.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,6 +428,14 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		40B7DCD12CF52F3300CBF33B /* XCRemoteSwiftPackageReference "stripe-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stripe/stripe-ios-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.1.0;
+			};
+		};
 		40F016BB2CB0CE4C001E8687 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -428,6 +451,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4036732D2CA331B200C30C77 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
 			productName = MapboxMaps;
+		};
+		40B7DCD22CF52F3300CBF33B /* StripePaymentsUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40B7DCD12CF52F3300CBF33B /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentsUI;
+		};
+		40B7DCD82CF5466E00CBF33B /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 40B7DCD12CF52F3300CBF33B /* XCRemoteSwiftPackageReference "stripe-ios-spm" */;
+			productName = StripePaymentSheet;
 		};
 		40F016BC2CB0CE4C001E8687 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

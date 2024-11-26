@@ -39,7 +39,7 @@ enum class Screen {
 @Composable
 fun NavigationBar() {
     var selectedScreen by remember { mutableStateOf(Screen.GetStarted) }
-    var noNavBarScreens = listOf(Screen.GetStarted, Screen.UserType, Screen.Login, Screen.Terms)
+    val noNavBarScreens = listOf(Screen.GetStarted, Screen.UserType, Screen.Login, Screen.Terms)
     val mapViewModel = remember { MapViewModel() }
     val userViewModel = remember { UserViewModel() }
     val mySpotsViewModel = remember { MySpotsViewModel() }

@@ -1,6 +1,7 @@
 import SwiftUI
 import ComposeApp
 import GoogleSignIn
+import StripePaymentsUI
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
@@ -8,8 +9,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     _ app: UIApplication,
     open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]
     ) -> Bool {
-        var handled: Bool
+        StripeAPI.defaultPublishableKey = "pk_test_51QLd7JHSPwdfxfQKhJ3Xy8f91p7Y89ApSN2I7ZTgPM71TGQzogmNmbiQExBW9RSl5MtDf49Cr4aN6tWeQvm20cWD00ZxsJFaBD"
         
+        var handled: Bool
         // Add any more custom url handles below
         handled = GIDSignIn.sharedInstance.handle(url)
 
@@ -23,7 +25,8 @@ struct iOSApp: App {
     
     init() {
         ViewFactoryKt.setViewFactories(
-            mapWithSwiftViewFactory: mapWithSwiftViewFactory
+            mapWithSwiftViewFactory: mapWithSwiftViewFactory,
+            stripePaymentViewFactory: stripePaymentViewFactory
         )
     }
     
