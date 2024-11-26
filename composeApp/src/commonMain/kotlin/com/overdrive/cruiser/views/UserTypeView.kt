@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun GetStartedView(onGetStartedClick: () -> Unit) {
+fun UserTypeView(onUserTypeClick: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -37,7 +37,7 @@ fun GetStartedView(onGetStartedClick: () -> Unit) {
             Spacer(modifier = Modifier.height(54.dp))
 
             Button(
-                onClick = { onGetStartedClick() },
+                onClick = { onUserTypeClick("Renter") },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -45,18 +45,21 @@ fun GetStartedView(onGetStartedClick: () -> Unit) {
                     .shadow(8.dp, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp))
             ) {
-                Text("Get Started", color = Color.White)
+                Text("I Am a Renter", color = Color.White)
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
-                onClick = { onGetStartedClick() },
-                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                elevation = null,
+                onClick = { onUserTypeClick("Owner") },
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp)
+                    .shadow(8.dp, RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(12.dp))
             ) {
-                Text("Already have an account", color = Color(0xFFF9784B))
+                Text("I Am an Owner", color = Color.Black)
             }
         }
 
