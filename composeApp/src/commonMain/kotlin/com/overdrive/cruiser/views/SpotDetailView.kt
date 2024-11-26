@@ -47,6 +47,7 @@ import com.overdrive.cruiser.endpoints.BookingEndpoint
 import com.overdrive.cruiser.models.Booking
 import com.overdrive.cruiser.models.BookingStatus
 import com.overdrive.cruiser.models.Spot
+import com.overdrive.cruiser.models.mapbox.DatePickerModel
 import com.overdrive.cruiser.utils.TimeRange
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_on
@@ -65,7 +66,7 @@ import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
+fun SpotDetailView(datePickerModel: DatePickerModel, spot: Spot, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     val bookingEndpoint = BookingEndpoint()
     var isDatePickerVisible by remember { mutableStateOf(false) }
@@ -96,7 +97,7 @@ fun SpotDetailView(spot: Spot, onBack: () -> Unit) {
                 Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
                 ) {
                     DatePickerView(
-                        state = datePickerState,
+                        datePickerModel = datePickerModel,
                         onBack = { isDatePickerVisible = false },
                         onSelected = {
                             selectedTimeRange = it

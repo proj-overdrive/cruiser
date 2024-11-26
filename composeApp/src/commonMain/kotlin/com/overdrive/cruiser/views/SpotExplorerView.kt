@@ -12,8 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,15 +21,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.overdrive.cruiser.models.MapViewModel
+import com.overdrive.cruiser.models.mapbox.DatePickerModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SpotExplorerView(mapViewModel: MapViewModel) {
     val scope = rememberCoroutineScope()
     val selectedSpot by mapViewModel.selectedSpot.collectAsState()
     val showFiltering by mapViewModel.showFiltering.collectAsState()
-    val datePickerState = rememberDatePickerState()
+    val datePickerModel = DatePickerModel()
 
     Box {
         LaunchedEffect(selectedSpot){
@@ -66,6 +64,7 @@ fun SpotExplorerView(mapViewModel: MapViewModel) {
         ) { spot ->
             if (spot != null) {
                 SpotDetailView(
+                    datePickerModel = datePickerModel,
                     spot = spot,
                     onBack = {
                         mapViewModel.updateSelectedSpot(null)
@@ -89,7 +88,7 @@ fun SpotExplorerView(mapViewModel: MapViewModel) {
         ) { showFiltering ->
             if (showFiltering) {
                 DatePickerView(
-                    state = datePickerState,
+                    datePickerModel = datePickerModel,
                     onBack = {
                         mapViewModel.setShowFiltering(false)
                         scope.launch {

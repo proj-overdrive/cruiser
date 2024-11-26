@@ -53,15 +53,15 @@ import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
-fun BookingsView(savedSpotsViewModel: BookingsViewModel) {
-    val allBookings by savedSpotsViewModel.bookings.collectAsState()
+fun BookingsView(bookingsViewModel: BookingsViewModel) {
+    val allBookings by bookingsViewModel.bookings.collectAsState()
     val currentTime = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()) }
 
     val upcomingBookings = allBookings.filter { it.endTime > currentTime }
     val pastBookings = allBookings.filter { it.endTime < currentTime }
 
     LaunchedEffect(Unit) {
-        savedSpotsViewModel.updateBookings()
+        bookingsViewModel.updateBookings()
     }
 
     Column(
@@ -83,8 +83,8 @@ fun BookingsView(savedSpotsViewModel: BookingsViewModel) {
                 { selectedTab = it }
             ) { i -> selectedTab = i }
             when (selectedTab) {
-                    0 -> BookingList(upcomingBookings, savedSpotsViewModel, Color(0xFF006400))
-                    1 -> BookingList(pastBookings, savedSpotsViewModel, Color.LightGray)
+                    0 -> SpotOnSpotList(upcomingBookings, bookingsViewModel, Color(0xFF006400))
+                    1 -> SpotOnSpotList(pastBookings, bookingsViewModel, Color.LightGray)
             }
         }
     }
