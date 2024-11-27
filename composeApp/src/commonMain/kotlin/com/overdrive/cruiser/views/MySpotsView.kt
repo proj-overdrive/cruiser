@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
@@ -40,6 +41,7 @@ import com.overdrive.cruiser.models.Spot
 import cruiser.composeapp.generated.resources.Res
 import cruiser.composeapp.generated.resources.accessibility_on
 import cruiser.composeapp.generated.resources.weather_on
+import cruiser.composeapp.generated.resources.activity
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -48,7 +50,7 @@ import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun MySpotsView(mySpotsViewModel: MySpotsViewModel, bookingsViewModel: BookingsViewModel,
-                onAddSpotClick: () -> Unit) {
+                onAddSpotClick: () -> Unit, onActivityClick: () -> Unit) {
     var selectedSpot by remember { mutableStateOf<Spot?>(null) }
 
     Column {
@@ -57,14 +59,14 @@ fun MySpotsView(mySpotsViewModel: MySpotsViewModel, bookingsViewModel: BookingsV
         } else {
             MySpotsList(mySpotsViewModel, bookingsViewModel, onAddSpotClick, onSpotSelected = {
                 selectedSpot = it
-            })
+            }, onActivityClick = onActivityClick)
         }
     }
 }
 
 @Composable
 fun MySpotsList(mySpotsViewModel: MySpotsViewModel, bookingsViewModel: BookingsViewModel,
-                onAddSpotClick: () -> Unit, onSpotSelected: (Spot) -> Unit) {
+                onAddSpotClick: () -> Unit, onSpotSelected: (Spot) -> Unit, onActivityClick: () -> Unit) {
     val allSpots by mySpotsViewModel.spots.collectAsState()
     val devSpots = allSpots.filter { it.ownerId == "dev3" }
 
@@ -86,7 +88,7 @@ fun MySpotsList(mySpotsViewModel: MySpotsViewModel, bookingsViewModel: BookingsV
     }
 
     Column(modifier = Modifier.background(color = Color(0xFFF5F5F5))) {
-        SpotOnTopBar("My Spots")
+        SpotOnTopBar("My Spots", clickableIcon = { SpotOnActivityIcon(onActivityClick) })
 
         Box(modifier = Modifier
             .fillMaxSize()
@@ -245,6 +247,19 @@ fun MySpotInformation(mySpotsViewModel: MySpotsViewModel, spot: Spot, onAddSpotC
                 }
             },
             onDismissRequest = { showDialog = false }
+        )
+    }
+}
+
+@Composable
+fun SpotOnActivityIcon(onActivityClick: () -> Unit) {
+    IconButton(
+        onClick = onActivityClick,
+        modifier = Modifier.size(24.dp)
+    ) {
+        Image(
+            imageVector = vectorResource(Res.drawable.activity),
+            contentDescription = null
         )
     }
 }

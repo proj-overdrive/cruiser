@@ -39,6 +39,7 @@ enum class Screen {
 @Composable
 fun NavigationBar() {
     var selectedScreen by remember { mutableStateOf(Screen.GetStarted) }
+    var selectedUserScreen by remember { mutableStateOf(UserScreen.UserSettings) }
     val noNavBarScreens = listOf(Screen.GetStarted, Screen.UserType, Screen.Login, Screen.Terms)
     val mapViewModel = remember { MapViewModel() }
     val userViewModel = remember { UserViewModel() }
@@ -106,10 +107,16 @@ fun NavigationBar() {
         ) {
             when (selectedScreen) {
                 Screen.Map -> SpotExplorerView(mapViewModel)
-                Screen.User -> UserView(userViewModel, onLogOut = { selectedScreen = Screen.GetStarted })
-                Screen.MySpots -> MySpotsView(mySpotsViewModel, bookingsViewModel) {
+                Screen.User -> UserView(userViewModel, userType, selectedUserScreen, {
+                    selectedScreen = Screen.GetStarted
+                }, {
+                    selectedUserScreen = UserScreen.UserSettings
+                })
+                Screen.MySpots -> MySpotsView(mySpotsViewModel, bookingsViewModel, {
                     selectedScreen = Screen.AddSpot
-                }
+                }, {
+                    selectedScreen = Screen.User; selectedUserScreen = UserScreen.RentalStatistics
+                })
                 Screen.Bookings -> BookingsView(bookingsViewModel)
                 Screen.AddSpot -> AddSpotView(
                     onBackClick = { selectedScreen = Screen.MySpots },
