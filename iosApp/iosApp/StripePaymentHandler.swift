@@ -11,7 +11,7 @@ import StripePaymentSheet
 import SwiftUI
 
 class StripePaymentHandler: ObservableObject {
-    let backendCheckoutUrl = URL(string: "http://localhost:8080/payment-sheet")!
+    let backendCheckoutUrl = URL(string: "http://spoton-env-6.eba-imaqwcfk.us-east-1.elasticbeanstalk.com/payment-sheet")!
     @Published var paymentSheet: PaymentSheet?
     @Published var paymentResult: PaymentSheetResult?
 

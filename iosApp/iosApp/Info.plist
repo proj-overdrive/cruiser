@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -49,17 +54,17 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>GIDServerClientID</key>
-    <string>48643618736-o7920fcp7si1at4kl6b9pkl9dq3cbe93.apps.googleusercontent.com</string>
-    <key>GIDClientID</key>
-    <string>48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu.apps.googleusercontent.com</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu</string>
-        </array>
-      </dict>
-    </array>
+	<string>48643618736-o7920fcp7si1at4kl6b9pkl9dq3cbe93.apps.googleusercontent.com</string>
+	<key>GIDClientID</key>
+	<string>48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

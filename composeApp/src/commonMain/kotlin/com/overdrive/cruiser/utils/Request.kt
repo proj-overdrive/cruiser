@@ -1,6 +1,5 @@
 package com.overdrive.cruiser.utils
 
-import com.overdrive.cruiser.getPlatformBasicName
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -12,12 +11,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 // Temporary logic while working with localhost api
-val BASE_URL: String =
-    when (getPlatformBasicName()) {
-        "iOS" -> "http://localhost:8080"
-        "Android" -> "http://10.0.2.2:8080"
-        else -> throw Error("INVALID PLATFORM: unable to determine API base")
-    }
+const val BASE_URL: String = "http://spoton-env-6.eba-imaqwcfk.us-east-1.elasticbeanstalk.com"
 
 val httpClient = HttpClient {
     install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
