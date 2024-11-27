@@ -67,10 +67,10 @@ fun SpotExplorerView(mapViewModel: MapViewModel) {
                     datePickerModel = datePickerModel,
                     spot = spot,
                     onBack = {
-                        mapViewModel.updateSelectedSpot(null)
                         scope.launch {
                             mapViewModel.updateSpots()
                         }
+                        mapViewModel.updateSelectedSpot(null)
                     }
                 )
             } else {
