@@ -35,6 +35,7 @@ struct iOSApp: App {
             ContentView().onOpenURL(perform: { url in
                 GIDSignIn.sharedInstance.handle(url)
             })
+            .environment(\.colorScheme, .light)
         }
     }
 }
