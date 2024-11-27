@@ -1,5 +1,12 @@
 package com.overdrive.cruiser.views
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -22,6 +28,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,8 +52,41 @@ import cruiser.composeapp.generated.resources.security
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.vectorResource
 
+enum class UserScreen {
+    UserSettings, RentalStatistics
+}
+
 @Composable
-fun UserView(userViewModel: UserViewModel, onLogOut: () -> Unit) {
+fun UserView(userViewModel: UserViewModel, userType: String, userScreen: UserScreen, onLogOut: () -> Unit,
+             onResetUserScreen: () -> Unit) {
+    var selectedScreen by remember { mutableStateOf(userScreen) }
+
+    AnimatedContent(
+        targetState = selectedScreen,
+        transitionSpec = {
+            if (targetState == UserScreen.UserSettings) {
+                slideInHorizontally(initialOffsetX = { -it }) + fadeIn() togetherWith
+                        slideOutHorizontally(targetOffsetX = { it }) + fadeOut() using
+                        SizeTransform(clip = false)
+            } else {
+                slideInHorizontally(initialOffsetX = { it }) + fadeIn() togetherWith
+                        slideOutHorizontally(targetOffsetX = { -it }) + fadeOut() using
+                        SizeTransform(clip = false)
+            }
+        }
+    ) { selected ->
+        when (selected) {
+            UserScreen.UserSettings -> UserSettingsView(userType, onLogOut) { selectedScreen = it; }
+            UserScreen.RentalStatistics -> RentalStatisticsView(
+                {selectedScreen = UserScreen.UserSettings},
+                onResetUserScreen
+            )
+        }
+    }
+}
+
+@Composable
+fun UserSettingsView(userType: String, onLogOut: () -> Unit, onNavigate: (UserScreen) -> Unit) {
     Column(modifier = Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))
     ) {
         Column(modifier = Modifier
@@ -93,9 +136,9 @@ fun UserView(userViewModel: UserViewModel, onLogOut: () -> Unit) {
                     }
                     item {
                         ProfileButton(
-                            "Rental History",
+                            if (userType == "Owner") "Rental Statistics" else "Rental History",
                             Res.drawable.clock,
-                            onClick = { /*TODO*/ }
+                            onClick = { onNavigate(UserScreen.RentalStatistics) }
                         )
                     }
                     item {

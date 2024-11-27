@@ -26,7 +26,8 @@ import org.jetbrains.compose.resources.painterResource
 import cruiser.composeapp.generated.resources.car_icon
 
 @Composable
-fun SpotOnTopBar(title: String, onBackClick: (() -> Unit)? = null) {
+fun SpotOnTopBar(title: String, onBackClick: (() -> Unit)? = null,
+                 clickableIcon: @Composable (() -> Unit)? = null) {
     TopAppBar(
         backgroundColor = Color.White,
         modifier = Modifier.shadow(8.dp),
@@ -45,6 +46,16 @@ fun SpotOnTopBar(title: String, onBackClick: (() -> Unit)? = null) {
                             Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Back"
                         )
+                    }
+                } else if (clickableIcon != null) {
+                    // only include clickable icon if clickableIcon is provided
+                    // assume that there is no back arrow in this case
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(16.dp, 8.dp)
+                    ) {
+                        clickableIcon()
                     }
                 }
 
