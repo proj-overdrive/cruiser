@@ -56,6 +56,8 @@ import cruiser.composeapp.generated.resources.accessibility_off
 import cruiser.composeapp.generated.resources.accessibility_on
 import cruiser.composeapp.generated.resources.weather_off
 import cruiser.composeapp.generated.resources.weather_on
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.vectorResource
@@ -277,18 +279,20 @@ fun AddSpotView(onBackClick: () -> Unit, onSpotAdded: () -> Unit, addSpotViewMod
                 onClick = {
                     val createdSpotNumbers = parseNumberRange(spotNumbers)
 
-                    for (spotNumber in createdSpotNumbers) {
+                    val spotCreationJobs = createdSpotNumbers.map { spotNumber ->
                         val spot = Spot(
                             "999", "dev3", "$selectedAddress $spotNumber",
                             currentLocation.longitude, currentLocation.latitude
                         )
 
-                        scope.launch {
+                        scope.async {
                             addSpotViewModel.createSpot(spot)
                         }
                     }
-
-                    onSpotAdded()
+                    scope.launch {
+                        spotCreationJobs.awaitAll()
+                        onSpotAdded()
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF9784B)),
                 modifier = Modifier
