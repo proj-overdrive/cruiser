@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -23,12 +18,34 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>GIDClientID</key>
+	<string>48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu.apps.googleusercontent.com</string>
+	<key>GIDServerClientID</key>
+	<string>48643618736-o7920fcp7si1at4kl6b9pkl9dq3cbe93.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MBXAccessToken</key>
 	<string>pk.eyJ1IjoicHJvai1vdmVyZHJpdmUiLCJhIjoiY20xZ20weGQxMDUzaDJtcHo2aTBidHB4biJ9.Wprz5amcVWlYW-rfDG_szA</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Requesting Permissions</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+	<string>Requesting Permissions</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -52,19 +69,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>GIDServerClientID</key>
-	<string>48643618736-o7920fcp7si1at4kl6b9pkl9dq3cbe93.apps.googleusercontent.com</string>
-	<key>GIDClientID</key>
-	<string>48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu.apps.googleusercontent.com</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.48643618736-bi9iq70hkfegaaki0dm247v01obsqbuu</string>
-			</array>
-		</dict>
 	</array>
 </dict>
 </plist>
