@@ -14,8 +14,12 @@ class SpotFetcher {
      * Fetches spots from the server.
      */
     suspend fun fetch(): List<Spot> {
-        val endpoint = "/spots"
-        return requestGet(endpoint)
+        try {
+            val endpoint = "/spots"
+            return requestGet(endpoint)
+        } catch (e : Exception) {
+            return listOf()
+        }
     }
 
     suspend fun fetch(id: String): Spot {
@@ -33,3 +37,4 @@ class SpotFetcher {
         val status = requestDelete(endpoint, spot)
     }
 }
+
