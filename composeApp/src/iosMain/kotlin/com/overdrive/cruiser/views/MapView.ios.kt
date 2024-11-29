@@ -2,6 +2,7 @@ package com.overdrive.cruiser.views
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.interop.UIKitViewController
@@ -33,6 +34,10 @@ actual fun SpotMapView(
     val contentLocationState = remember { MutableStateFlow(location) }
     val contentSpotsState = remember { MutableStateFlow(spots) }
     val contentOnSpotSelected = remember { onSpotSelected }
+
+    LaunchedEffect(location) {
+        contentLocationState.value = location
+    }
 
     val factory = remember {
         mapWithSwiftViewFactory(contentPaddingState, contentLocationState, contentSpotsState, contentOnSpotSelected)

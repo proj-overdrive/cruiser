@@ -83,6 +83,13 @@ kotlin {
             implementation(libs.androidx.credentials)
             implementation(libs.androidx.credentials.play.services.auth)
             implementation(libs.google.id)
+            implementation(libs.compass.geocoder)
+            implementation(libs.compass.geocoder.mobile)
+            implementation(libs.compass.geolocation)
+            implementation(libs.compass.geolocation.mobile)
+            implementation(libs.compass.autocomplete)
+            implementation(libs.compass.autocomplete.mobile)
+            implementation(libs.compass.permissions.mobile)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -97,9 +104,23 @@ kotlin {
             implementation(libs.bundles.ktor.common)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.compass.geocoder)
+            implementation(libs.compass.geocoder.mobile)
+            implementation(libs.compass.geolocation)
+            implementation(libs.compass.geolocation.mobile)
+            implementation(libs.compass.autocomplete)
+            implementation(libs.compass.autocomplete.mobile)
+            implementation(libs.compass.permissions.mobile)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.compass.geocoder)
+            implementation(libs.compass.geocoder.mobile)
+            implementation(libs.compass.geolocation)
+            implementation(libs.compass.geolocation.mobile)
+            implementation(libs.compass.autocomplete)
+            implementation(libs.compass.autocomplete.mobile)
+            implementation(libs.compass.permissions.mobile)
         }
     }
 }
