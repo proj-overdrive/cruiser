@@ -41,7 +41,7 @@ fun DatePickerView(datePickerModel: DatePickerModel, onBack: () -> Unit, onSelec
         initialMinute = datePickerModel.endMinute.value)
 
     Column (Modifier.fillMaxSize().background(color = Color(0xFFF5F5F5))) {
-        SpotOnTopBar("Filter Spots") { onBack() }
+        SpotOnTopBar("Filter Spots", onBackClick = onBack)
 
         Column(modifier = Modifier.padding(16.dp)) {
             DatePicker(
